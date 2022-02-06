@@ -11,11 +11,6 @@ import javax.servlet.http.HttpServletResponse
 
 @Component
 class JwtAuthenticationEntryPoint : AuthenticationEntryPoint, Serializable {
-    companion object {
-        private const val serialVersionUID = -7858869558953243875L
-    }
-
-    @Throws(IOException::class)
     override fun commence(
         request: HttpServletRequest?, response: HttpServletResponse,
         authException: AuthenticationException?

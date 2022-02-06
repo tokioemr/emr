@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -16,16 +17,17 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import xyz.l7ssha.emr.configuration.security.JwtAuthenticationEntryPoint
 import xyz.l7ssha.emr.configuration.security.JwtRequestFilter
+import xyz.l7ssha.emr.service.UserDetailsService as UserDetailsServiceSelf
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
-    private var userDetailsService: xyz.l7ssha.emr.service.UserDetailsService? = null
+    private lateinit var userDetailsService: UserDetailsServiceSelf
 
     @Autowired
-    private val unauthorizedHandler: JwtAuthenticationEntryPoint? = null
+    private lateinit var unauthorizedHandler: JwtAuthenticationEntryPoint
 
     @Bean
     fun authenticationJwtTokenFilter(): JwtRequestFilter {
@@ -46,6 +48,10 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
+    }
+
+    override fun configure(web: WebSecurity) {
+        web.ignoring().antMatchers("/api/auth/**")
     }
 
     override fun configure(http: HttpSecurity) {

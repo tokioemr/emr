@@ -31,6 +31,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
     ) {
         try {
             val jwt = parseJwt(request)
+
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 val username: String = jwtUtils.getUserNameFromJwtToken(jwt)
                 val userDetails: UserDetails = userDetailsService.loadUserByUsername(username)
@@ -39,6 +40,8 @@ class JwtRequestFilter : OncePerRequestFilter() {
                 )
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
+
+                return
             }
         } catch (e: Exception) {
             Companion.logger.warning("Cannot set user authentication: $e")

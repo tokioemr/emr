@@ -35,9 +35,9 @@ class AuthenticationController {
 
     @PostMapping("/login")
     fun authAction(@Valid @RequestBody jwtRequestInputDto: JwtRequestInputDto): JwtResponseOutputDto {
-       authenticate(jwtRequestInputDto.username!!, jwtRequestInputDto.password!!);
+        authenticate(jwtRequestInputDto.username, jwtRequestInputDto.password)
 
-        val userDetails = jwtInMemoryUserDetailsService.loadUserByUsername(jwtRequestInputDto.username);
+        val userDetails = jwtInMemoryUserDetailsService.loadUserByUsername(jwtRequestInputDto.username)
         return JwtResponseOutputDto(jwtTokenUtil.generateJwtToken(userDetails.username))
     }
 
