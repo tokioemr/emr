@@ -1,7 +1,8 @@
 package xyz.l7ssha.emr.entities
 
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import javax.persistence.*
-import javax.transaction.Transactional
 
 @Entity
 @Table(name = "users")
@@ -20,7 +21,8 @@ open class User (
     @Column(name = "enabled", nullable = false)
     open var enabled: Boolean = false,
 
-    @ManyToMany(targetEntity = UserPermission::class, cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = UserPermission::class, cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinColumn(name = "user_permissions", referencedColumnName = "id")
+    @Fetch(FetchMode.JOIN)
     open val permissions: List<UserPermission> = listOf()
 )

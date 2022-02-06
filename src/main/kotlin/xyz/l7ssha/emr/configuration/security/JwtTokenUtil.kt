@@ -10,13 +10,14 @@ import java.util.logging.Logger
 @Component
 class JwtTokenUtil {
     companion object {
+        const val jwtExpirationMs = 60000L
+        const val jwtRefreshExpirationMs = 60000L
+
         private val logger: Logger = Logger.getLogger(JwtTokenUtil::class.java.canonicalName)
     }
 
     @Value("jwt.secret")
     private lateinit var jwtSecret: String
-
-    private val jwtExpirationMs = 60000
 
     fun generateJwtToken(username: String): String {
         return Jwts.builder()

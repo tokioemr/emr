@@ -24,6 +24,6 @@ class UserDetailsService : UserDetailsService {
                 )
             }
 
-        return UserPrincipal(user.username!!, user.password!!, user.permissions, user.enabled)
+        return UserPrincipal(user.username, user.password, user.permissions, user.enabled)
     }
 }
