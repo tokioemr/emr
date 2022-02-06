@@ -15,7 +15,6 @@ class UserDetailsService : UserDetailsService {
     @Autowired
     private lateinit var userRepository: UserRepository
 
-    @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
        val user = userRepository.findByUsername(username)
             .orElseThrow {
