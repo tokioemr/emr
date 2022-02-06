@@ -29,10 +29,6 @@ class AuthenticationController {
     @Autowired
     private lateinit var jwtInMemoryUserDetailsService: UserDetailsService
 
-    fun registerAction(): JwtResponseOutputDto {
-        TODO("Implement")
-    }
-
     @PostMapping("/login")
     fun authAction(@Valid @RequestBody jwtRequestInputDto: JwtRequestInputDto): JwtResponseOutputDto {
         authenticate(jwtRequestInputDto.username, jwtRequestInputDto.password)

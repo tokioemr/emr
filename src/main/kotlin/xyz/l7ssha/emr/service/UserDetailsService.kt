@@ -9,7 +9,6 @@ import xyz.l7ssha.emr.configuration.security.UserPrincipal
 import xyz.l7ssha.emr.repositories.UserRepository
 import javax.transaction.Transactional
 
-
 @Service
 @Transactional
 class UserDetailsService : UserDetailsService {
@@ -18,11 +17,7 @@ class UserDetailsService : UserDetailsService {
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
-        if (username == "admin")  {
-            return UserPrincipal("admin", "\$2y\$10\$jBYt/YrUgOU9n7eUuttGuewx0iMmlUNqlgZJCtWAGXovzG8ijzaGG", emptyList(), true)
-        }
-
-        val user = userRepository.findByUsername(username)
+       val user = userRepository.findByUsername(username)
             .orElseThrow {
                 UsernameNotFoundException(
                     "User NOT Found"

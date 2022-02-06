@@ -1,5 +1,6 @@
 package xyz.l7ssha.emr.entities
 
+import xyz.l7ssha.emr.configuration.security.PermissionType
 import javax.persistence.*
 
 @Entity
