@@ -5,13 +5,13 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "user_permissions")
-open class UserPermission {
+open class UserPermission (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    open var id: Long? = null
+    open val id: Long,
 
     @Column(name = "name", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
-    open var name: PermissionType? = null
-}
+    open val name: PermissionType
+)

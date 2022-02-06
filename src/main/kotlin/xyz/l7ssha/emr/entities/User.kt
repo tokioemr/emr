@@ -1,25 +1,26 @@
 package xyz.l7ssha.emr.entities
 
 import javax.persistence.*
+import javax.transaction.Transactional
 
 @Entity
 @Table(name = "users")
-open class User {
+open class User (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    open var id: Long? = null
+    open val id: Long,
 
     @Column(name = "username", nullable = false, unique = true)
-    open var username: String? = null
+    open var username: String,
 
     @Column(name = "password", nullable = false)
-    open var password: String? = null
+    open var password: String,
 
     @Column(name = "enabled", nullable = false)
-    open var enabled: Boolean = false
+    open var enabled: Boolean = false,
 
-    @ManyToMany(targetEntity = UserPermission::class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = UserPermission::class, cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "user_permissions", referencedColumnName = "id")
-    open var permissions: List<UserPermission> = listOf()
-}
+    open val permissions: List<UserPermission> = listOf()
+)
