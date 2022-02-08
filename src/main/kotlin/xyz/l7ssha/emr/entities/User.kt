@@ -12,8 +12,8 @@ open class User (
     @Column(name = "id", nullable = false)
     open val id: Long,
 
-    @Column(name = "username", nullable = false, unique = true)
-    open var username: String,
+    @Column(name = "email", nullable = false, unique = true)
+    open var email: String,
 
     @Column(name = "password", nullable = false)
     open var password: String,

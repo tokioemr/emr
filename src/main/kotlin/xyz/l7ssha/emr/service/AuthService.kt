@@ -4,9 +4,9 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
@@ -21,26 +21,36 @@ import javax.servlet.http.HttpServletRequest
 
 @Service
 class AuthService(
-    @Autowired val authenticationManager: AuthenticationManager,
     @Autowired val userRepository: UserRepository,
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val refreshTokenRepository: RefreshTokenRepository,
+    @Autowired val passwordEncoder: PasswordEncoder,
     @Value("\${jwt.secret}") val jwtSecret: String,
     @Value("\${jwt.expirationMs}") val jwtExpirationMs: Long = 60000L,
     @Value("\${jwt.refreshExpirationMs}") val jwtRefreshExpirationMs: Long = 60000L
 ) {
-    fun authWithPassword(username: String, password: String) : Pair<String, String> {
-        val auth = authenticationManager.authenticate(UsernamePasswordAuthenticationToken(username, password))
-        SecurityContextHolder.getContext().authentication = auth
+    fun registerUser(email: String, password: String) : Pair<String, String> {
+        if (userRepository.findByEmail(email).isPresent) {
+            throw Exception("test")
+        }
 
-        val user = userRepository.findByUsername(username)
+        val user = User(0L, email, passwordEncoder.encode(password), true, emptyList()).apply {
+            userRepository.save(this)
+        }
+
+        val refreshToken = updateOrCreateRefreshTokenEntity(user)
+        return Pair(generateJwtToken(user.email), refreshToken.refreshToken)
+    }
+
+    fun authWithPassword(email: String, password: String) : Pair<String, String> {
+        val user = userRepository.findByEmail(email)
         if (user.isEmpty) {
             throw JwtException("Missing user")
         }
 
         val refreshToken = updateOrCreateRefreshTokenEntity(user.get())
 
-        return Pair(generateJwtToken(user.get().username), refreshToken.refreshToken)
+        return Pair(generateJwtToken(user.get().email), refreshToken.refreshToken)
     }
 
     fun authWithRefreshToken(refreshToken: String): Pair<String, String> {
@@ -57,7 +67,7 @@ class AuthService(
         refreshTokenRepository.save(refreshTokenEntity)
 
         return Pair(
-            generateJwtToken(refreshTokenEntity.user.username),
+            generateJwtToken(refreshTokenEntity.user.email),
             refreshTokenEntity.refreshToken
         )
     }
@@ -67,8 +77,8 @@ class AuthService(
             val jwt = parseJwtFromRequest(request)
 
             if (jwt != null && validateJwtToken(jwt)) {
-                val username: String = getUserNameFromJwtToken(jwt)
-                val userDetails = userDetailsService.loadUserByUsername(username)
+                val email: String = getUserNameFromJwtToken(jwt)
+                val userDetails = userDetailsService.loadUserByUsername(email)
 
                 val authentication = UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.authorities

@@ -16,13 +16,13 @@ class UserDetailsService : UserDetailsService {
     private lateinit var userRepository: UserRepository
 
     override fun loadUserByUsername(username: String): UserDetails {
-       val user = userRepository.findByUsername(username)
+       val user = userRepository.findByEmail(username)
             .orElseThrow {
                 UsernameNotFoundException(
                     "User NOT Found"
                 )
             }
 
-        return UserPrincipal(user.username, user.password, user.permissions, user.enabled)
+        return UserPrincipal(user.email, user.password, user.permissions, user.enabled)
     }
 }
