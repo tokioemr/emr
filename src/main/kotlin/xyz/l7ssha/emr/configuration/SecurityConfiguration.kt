@@ -34,6 +34,11 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         return JwtRequestFilter()
     }
 
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
+
     public override fun configure(authenticationManagerBuilder: AuthenticationManagerBuilder) {
         authenticationManagerBuilder.userDetailsService<UserDetailsService>(userDetailsService)
             .passwordEncoder(passwordEncoder())
@@ -43,11 +48,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun authenticationManagerBean(): AuthenticationManager {
         return super.authenticationManagerBean()
-    }
-
-    @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
     }
 
     override fun configure(web: WebSecurity) {

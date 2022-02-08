@@ -25,7 +25,7 @@ class AuthService(
     @Autowired val userRepository: UserRepository,
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val refreshTokenRepository: RefreshTokenRepository,
-    @Value("jwt.secret") val jwtSecret: String,
+    @Value("\${jwt.secret}") val jwtSecret: String,
     @Value("\${jwt.expirationMs}") val jwtExpirationMs: Long = 60000L,
     @Value("\${jwt.refreshExpirationMs}") val jwtRefreshExpirationMs: Long = 60000L
 ) {

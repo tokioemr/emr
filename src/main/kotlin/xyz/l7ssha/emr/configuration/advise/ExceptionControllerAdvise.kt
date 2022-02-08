@@ -1,4 +1,4 @@
-package xyz.l7ssha.emr.configuration
+package xyz.l7ssha.emr.configuration.advise
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

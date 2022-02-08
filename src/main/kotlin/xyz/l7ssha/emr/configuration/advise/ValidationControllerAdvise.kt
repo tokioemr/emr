@@ -1,4 +1,4 @@
-package xyz.l7ssha.emr.configuration
+package xyz.l7ssha.emr.configuration.advise
 
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -13,7 +13,6 @@ import java.util.function.Consumer
 
 @ControllerAdvice
 class ValidationControllerAdvise : ResponseEntityExceptionHandler() {
-
     override fun handleMethodArgumentNotValid(
         ex: MethodArgumentNotValidException,
         headers: HttpHeaders,
