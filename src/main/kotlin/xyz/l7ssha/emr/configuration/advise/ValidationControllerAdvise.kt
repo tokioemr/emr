@@ -20,10 +20,10 @@ class ValidationControllerAdvise : ResponseEntityExceptionHandler() {
         request: WebRequest
     ): ResponseEntity<Any> {
         val errors: MutableMap<String, String?> = HashMap()
+
         ex.bindingResult.allErrors.forEach(Consumer { error: ObjectError ->
             val fieldName = (error as FieldError).field
-            val message = error.getDefaultMessage()
-            errors[fieldName] = message
+            errors[fieldName] =  error.defaultMessage
         })
 
         return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
