@@ -39,7 +39,7 @@ class AuthService(
         }
 
         val refreshToken = updateOrCreateRefreshTokenEntity(user)
-        return Pair(generateJwtToken(user.email), refreshToken.refreshToken)
+        return Pair(generateJwtToken(user), refreshToken.refreshToken)
     }
 
     fun authWithPassword(email: String, password: String) : Pair<String, String> {
@@ -50,7 +50,7 @@ class AuthService(
 
         val refreshToken = updateOrCreateRefreshTokenEntity(user.get())
 
-        return Pair(generateJwtToken(user.get().email), refreshToken.refreshToken)
+        return Pair(generateJwtToken(user.get()), refreshToken.refreshToken)
     }
 
     fun authWithRefreshToken(refreshToken: String): Pair<String, String> {
@@ -67,7 +67,7 @@ class AuthService(
         refreshTokenRepository.save(refreshTokenEntity)
 
         return Pair(
-            generateJwtToken(refreshTokenEntity.user.email),
+            generateJwtToken(refreshTokenEntity.user),
             refreshTokenEntity.refreshToken
         )
     }
@@ -100,12 +100,13 @@ class AuthService(
         } else null
     }
 
-    private fun generateJwtToken(username: String): String {
+    private fun generateJwtToken(user: User): String {
         return Jwts.builder()
-            .setSubject(username)
+            .setSubject(user.email)
             .setIssuedAt(Date())
             .setExpiration(Date(Date().time + jwtExpirationMs))
             .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .addClaims(mapOf("permissions" to user.permissions.map { it.name }))
             .compact()
     }
 
