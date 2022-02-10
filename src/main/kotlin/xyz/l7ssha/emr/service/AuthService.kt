@@ -53,13 +53,17 @@ class AuthService(
         return Pair(generateJwtToken(user.get()), refreshToken.refreshToken)
     }
 
-    fun authWithRefreshToken(refreshToken: String): Pair<String, String> {
+    fun authWithRefreshToken(refreshToken: String, email: String): Pair<String, String> {
         val refreshTokenEntity = refreshTokenRepository.getByRefreshToken(refreshToken).orElseThrow {
             throw JwtException("Invalid refresh token")
         }
 
         if (refreshTokenEntity.expirationDate < Instant.now()) {
             throw JwtException("Refresh token expired")
+        }
+
+        if (refreshTokenEntity.user.email != email) {
+            throw JwtException("Given email is invalid for given token")
         }
 
         refreshTokenEntity.refreshToken = generateRefreshToken();
