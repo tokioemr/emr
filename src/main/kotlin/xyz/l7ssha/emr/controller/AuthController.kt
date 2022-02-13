@@ -11,7 +11,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/auth")
-class AuthenticationController(
+class AuthController(
     @Autowired val authService: AuthService,
     @Autowired val eventPublisher: ApplicationEventPublisher
 ) {
