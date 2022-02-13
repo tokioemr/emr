@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import xyz.l7ssha.emr.configuration.exception.JwtException
+import xyz.l7ssha.emr.configuration.exception.ValidationException
 import xyz.l7ssha.emr.entities.RefreshToken
 import xyz.l7ssha.emr.entities.User
 import xyz.l7ssha.emr.repositories.RefreshTokenRepository
@@ -31,7 +32,7 @@ class AuthService(
 ) {
     fun registerUser(email: String, password: String) : Pair<String, String> {
         if (userRepository.findByEmail(email).isPresent) {
-            throw Exception("test")
+            throw ValidationException("User with given email already exists")
         }
 
         val user = User(0L, email, passwordEncoder.encode(password), true, emptyList()).apply {

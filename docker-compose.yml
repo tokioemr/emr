@@ -13,6 +13,8 @@ services:
     command: ./gradlew --project-cache-dir /tmp/gradle-cache bootRun
     depends_on:
       - db
+    links:
+      - mailtrap
     environment:
       JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     env_file:
@@ -30,3 +32,8 @@ services:
       - ./pgdata:/pgdata
       - /etc/passwd:/etc/passwd:ro
     user: 1000:1000
+
+  mailtrap:
+    image: msztolcman/sendria:v2.2.2.0
+    ports:
+      - "127.0.0.1:9080:1080"
