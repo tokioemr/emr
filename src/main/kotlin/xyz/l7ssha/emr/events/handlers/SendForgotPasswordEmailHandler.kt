@@ -23,7 +23,7 @@ class SendForgotPasswordEmailHandler(
     @EventListener
     fun on(event: SendForgotPasswordEmailCommand) {
         val user = userRepository.findByEmail(event.email).orElseThrow {
-            ValidationException("Account with given email does not exists")
+            throw ValidationException("Account with given email does not exists")
         }
 
         val forgotPasswordToken = ForgotPasswordToken(0L, user, UUID.randomUUID().toString(), Instant.now().plusMillis(forgotPasswordExpirationMs))

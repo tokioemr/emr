@@ -1,14 +1,14 @@
 package xyz.l7ssha.emr.dto.security
 
-import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 class JwtLoginInputDto {
     @NotNull
-    @NotEmpty
+    @NotBlank
     lateinit var email: String
 
     @NotNull
-    @NotEmpty
+    @NotBlank
     lateinit var password: String
 }

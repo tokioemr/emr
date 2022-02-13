@@ -5,14 +5,18 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-class RegisterInputDto {
-    @NotNull
+class ForgotPasswordConfirmInputDto {
     @NotBlank
+    @NotNull
     @Email
     lateinit var email: String
 
-    @NotNull
     @NotBlank
+    @NotNull
     @ValidPassword
     lateinit var password: String
+
+    @NotBlank
+    @NotNull
+    lateinit var token: String
 }

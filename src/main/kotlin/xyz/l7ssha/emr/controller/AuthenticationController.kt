@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.web.bind.annotation.*
 import xyz.l7ssha.emr.dto.security.*
+import xyz.l7ssha.emr.events.commands.ConfirmForgotPasswordCommand
 import xyz.l7ssha.emr.events.commands.SendForgotPasswordEmailCommand
 import xyz.l7ssha.emr.service.AuthService
 import javax.validation.Valid
@@ -41,13 +42,14 @@ class AuthenticationController(
         eventPublisher.publishEvent(SendForgotPasswordEmailCommand(forgotPasswordInputDto.email))
     }
 
-    @GetMapping("/forgot-password-confirm/{token}")
-    fun forgotPasswordConfirm(@PathVariable token: String) {
-        TODO()
-    }
-
-    @PostMapping("/update-password")
-    fun updatePasswordAction() {
-        TODO("Not implemented")
+    @GetMapping("/forgot-password-confirm")
+    fun forgotPasswordConfirm(@Valid @RequestBody forgotPasswordConfirmInputDto: ForgotPasswordConfirmInputDto) {
+        eventPublisher.publishEvent(
+            ConfirmForgotPasswordCommand(
+                forgotPasswordConfirmInputDto.email,
+                forgotPasswordConfirmInputDto.password,
+                forgotPasswordConfirmInputDto.token
+            )
+        )
     }
 }
