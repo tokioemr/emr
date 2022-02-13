@@ -2,7 +2,10 @@ package xyz.l7ssha.emr.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import xyz.l7ssha.emr.dto.security.*
 import xyz.l7ssha.emr.events.commands.ConfirmForgotPasswordCommand
 import xyz.l7ssha.emr.events.commands.SendForgotPasswordEmailCommand
@@ -42,7 +45,7 @@ class AuthController(
         eventPublisher.publishEvent(SendForgotPasswordEmailCommand(forgotPasswordInputDto.email))
     }
 
-    @GetMapping("/forgot-password-confirm")
+    @PostMapping("/forgot-password-confirm")
     fun forgotPasswordConfirm(@Valid @RequestBody forgotPasswordConfirmInputDto: ForgotPasswordConfirmInputDto) {
         eventPublisher.publishEvent(
             ConfirmForgotPasswordCommand(

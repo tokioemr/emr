@@ -9,7 +9,6 @@ import xyz.l7ssha.emr.events.commands.ConfirmForgotPasswordCommand
 import xyz.l7ssha.emr.repositories.ForgotPasswordTokenRepository
 import xyz.l7ssha.emr.repositories.UserRepository
 import java.time.Instant
-import javax.transaction.Transactional
 
 @Component
 class ConfirmForgotPasswordHandler(
@@ -18,17 +17,16 @@ class ConfirmForgotPasswordHandler(
     @Autowired val passwordEncoder: PasswordEncoder
 ){
     @EventListener
-    @Transactional
     fun on(event: ConfirmForgotPasswordCommand) {
         val user = userRepository.findByEmail(event.email).orElseThrow {
-            throw ValidationException("Account with given email does not exists")
+            ValidationException("Account with given email does not exists")
         }
 
         val token = forgotPasswordTokenRepository.findByToken(event.token).orElseThrow {
-            throw ValidationException("Given token does not exists")
+            ValidationException("Given token does not exists")
         }
 
-        if (token.expirationDate < Instant.now()) {
+        if (token.expirationDate.isBefore(Instant.now())) {
             throw ValidationException("Given token expired")
         }
 

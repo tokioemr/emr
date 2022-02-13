@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 class MailService(
     @Autowired val mailSender: MailSender,
-    @Value("\${app.baseUr}") val baseUrl: String
+    @Value("\${app.baseUrl}") val baseUrl: String
 ) {
     fun sendForgotPasswordEmail(email: String, resetToken: String) {
         val message = SimpleMailMessage()

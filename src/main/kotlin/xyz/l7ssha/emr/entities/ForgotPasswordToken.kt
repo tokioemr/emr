@@ -14,7 +14,7 @@ class ForgotPasswordToken(
     open val id: Long,
 
     @JoinColumn(name = "user_id", nullable = false, unique = true)
-    @OneToOne(targetEntity = User::class, fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToOne(targetEntity = User::class, fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     open val user: User,
 
