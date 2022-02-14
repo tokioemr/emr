@@ -24,5 +24,8 @@ open class User (
     @ManyToMany(targetEntity = UserPermission::class, cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinColumn(name = "user_permissions", referencedColumnName = "id")
     @Fetch(FetchMode.JOIN)
-    open val permissions: List<UserPermission> = listOf()
+    open val permissions: List<UserPermission> = listOf(),
+
+    @Column(name = "password_expired", nullable = false)
+    open val passwordExpired: Boolean = true
 )

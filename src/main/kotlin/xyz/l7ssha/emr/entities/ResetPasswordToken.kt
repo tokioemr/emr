@@ -6,8 +6,8 @@ import java.time.Instant
 import javax.persistence.*
 
 @Entity
-@Table(name = "forgot_password_tokens")
-class ForgotPasswordToken(
+@Table(name = "reset_password_tokens")
+open class ResetPasswordToken(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

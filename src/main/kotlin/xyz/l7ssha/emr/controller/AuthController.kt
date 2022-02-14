@@ -40,12 +40,12 @@ class AuthController(
         return JwtResultOutputDto(jwtToken, refreshToken)
     }
 
-    @PostMapping("/forgot-password")
+    @PostMapping("/reset-password")
     fun forgotPasswordAction(@Valid @RequestBody forgotPasswordInputDto: ForgotPasswordInputDto) {
         eventPublisher.publishEvent(SendForgotPasswordEmailCommand(forgotPasswordInputDto.email))
     }
 
-    @PostMapping("/forgot-password-confirm")
+    @PostMapping("/reset-password-confirm")
     fun forgotPasswordConfirm(@Valid @RequestBody forgotPasswordConfirmInputDto: ForgotPasswordConfirmInputDto) {
         eventPublisher.publishEvent(
             ConfirmForgotPasswordCommand(

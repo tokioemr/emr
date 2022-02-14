@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import xyz.l7ssha.emr.configuration.exception.JwtException
 import xyz.l7ssha.emr.configuration.exception.ValidationException
+import xyz.l7ssha.emr.configuration.exception.ValidationExceptionWithData
 import xyz.l7ssha.emr.entities.RefreshToken
 import xyz.l7ssha.emr.entities.User
 import xyz.l7ssha.emr.repositories.RefreshTokenRepository
@@ -25,6 +26,7 @@ class AuthService(
     @Autowired val userRepository: UserRepository,
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val refreshTokenRepository: RefreshTokenRepository,
+    @Autowired val resetPasswordTokenService: ResetPasswordTokenService,
     @Autowired val passwordEncoder: PasswordEncoder,
     @Value("\${jwt.secret}") val jwtSecret: String,
     @Value("\${jwt.expirationMs}") val jwtExpirationMs: Long = 60000L,
@@ -35,7 +37,7 @@ class AuthService(
             throw ValidationException("User with given email already exists")
         }
 
-        val user = User(0L, email, passwordEncoder.encode(password), true, emptyList()).apply {
+        val user = User(0L, email, passwordEncoder.encode(password), true, emptyList(), false).apply {
             userRepository.save(this)
         }
 
@@ -47,6 +49,17 @@ class AuthService(
         val user = userRepository.findByEmail(email)
         if (user.isEmpty) {
             throw JwtException("Missing user")
+        }
+
+        if (user.get().passwordExpired)  {
+            throw ValidationExceptionWithData(
+                "Password expired",
+                mapOf("token" to resetPasswordTokenService.generateResetPasswordToken(user.get()).token)
+            )
+        }
+
+        if (user.get().password != passwordEncoder.encode(password)) {
+            throw JwtException("Invalid password")
         }
 
         val refreshToken = updateOrCreateRefreshTokenEntity(user.get())
