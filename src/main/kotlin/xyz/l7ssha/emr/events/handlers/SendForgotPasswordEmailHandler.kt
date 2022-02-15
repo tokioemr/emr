@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
-import xyz.l7ssha.emr.configuration.exception.ValidationException
+import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
 import xyz.l7ssha.emr.events.commands.SendEmailCommand
 import xyz.l7ssha.emr.events.commands.SendForgotPasswordEmailCommand
 import xyz.l7ssha.emr.repositories.UserRepository
@@ -21,7 +21,7 @@ class SendForgotPasswordEmailHandler(
     @EventListener
     fun on(event: SendForgotPasswordEmailCommand) {
         val user = userRepository.findByEmail(event.email).orElseThrow {
-            ValidationException("Account with given email does not exists")
+            CatchableApplicationException("Account with given email does not exists")
         }
 
         val resetPasswordToken = resetPasswordTokenService.generateResetPasswordToken(user)

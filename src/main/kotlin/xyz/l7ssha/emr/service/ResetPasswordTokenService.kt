@@ -3,7 +3,7 @@ package xyz.l7ssha.emr.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import xyz.l7ssha.emr.configuration.exception.ValidationException
+import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
 import xyz.l7ssha.emr.entities.ResetPasswordToken
 import xyz.l7ssha.emr.entities.User
 import xyz.l7ssha.emr.repositories.ResetPasswordTokenRepository
@@ -20,7 +20,7 @@ class ResetPasswordTokenService(
 
         resetPasswordTokenRepository.findByUser(user).ifPresent {
             if (it.expirationDate.isAfter(now)) {
-                throw ValidationException("There is already ongoing request")
+                throw CatchableApplicationException("There is already ongoing request")
             }
 
             resetPasswordTokenRepository.delete(it)

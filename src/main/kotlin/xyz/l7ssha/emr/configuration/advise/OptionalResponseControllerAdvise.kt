@@ -9,7 +9,6 @@ import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
-import java.io.Serializable
 import java.util.*
 
 @ControllerAdvice
@@ -27,7 +26,7 @@ class OptionalResponseControllerAdvice : ResponseBodyAdvice<Any?> {
         response: ServerHttpResponse
     ): Any? {
         if (returnType.parameterType == Optional::class.java && (body as Optional<*>).isEmpty) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body<Map<String, Serializable>>(emptyMap())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
         }
 
         return body
