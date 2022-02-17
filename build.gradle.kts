@@ -39,9 +39,6 @@ dependencies {
 
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 
-    implementation("org.mapstruct:mapstruct:1.5.0.Beta2")
-    kapt("org.mapstruct:mapstruct-processor:1.5.0.Beta2")
-
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

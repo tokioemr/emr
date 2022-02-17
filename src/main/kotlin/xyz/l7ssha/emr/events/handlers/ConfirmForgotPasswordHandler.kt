@@ -31,6 +31,7 @@ class ConfirmForgotPasswordHandler(
         }
 
         user.password = passwordEncoder.encode(event.password)
+        user.passwordExpired = false
         userRepository.save(user)
 
         resetPasswordTokenRepository.delete(token)

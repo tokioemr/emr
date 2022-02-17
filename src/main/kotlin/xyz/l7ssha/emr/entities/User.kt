@@ -27,5 +27,5 @@ open class User (
     open val permissions: List<UserPermission> = listOf(),
 
     @Column(name = "password_expired", nullable = false)
-    open val passwordExpired: Boolean = true
+    open var passwordExpired: Boolean = true
 )

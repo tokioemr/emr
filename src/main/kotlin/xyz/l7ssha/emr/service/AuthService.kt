@@ -58,7 +58,7 @@ class AuthService(
             )
         }
 
-        if (user.get().password != passwordEncoder.encode(password)) {
+        if (!passwordEncoder.matches(password, user.get().password)) {
             throw JwtApplicationException("Invalid password")
         }
 
