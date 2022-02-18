@@ -1,6 +1,7 @@
 package xyz.l7ssha.emr.controller.api
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -18,5 +19,5 @@ class UserController(@Autowired val userMapper: UserMapper, @Autowired val userR
     fun getUserAction(@PathVariable id: Long): UserOutputDto = userMapper.userToUserOutputDto(userRepository.getById(id))
 
     @GetMapping
-    fun getUsersAction() = userRepository.findAll().map { userMapper.userToUserOutputDto(it) }
+    fun getUsersAction(pageable: Pageable) = userRepository.findAll(pageable).map { userMapper.userToUserOutputDto(it) }
 }
