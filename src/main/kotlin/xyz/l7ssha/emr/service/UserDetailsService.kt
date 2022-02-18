@@ -23,6 +23,6 @@ class UserDetailsService : UserDetailsService {
                 )
             }
 
-        return UserPrincipal(user.email, user.password, user.permissions, user.enabled)
+        return UserPrincipal(user.id, user.email, user.password, user.permissions, user.enabled)
     }
 }
