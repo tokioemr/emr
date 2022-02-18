@@ -8,6 +8,7 @@ import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationExceptionWithData
 import xyz.l7ssha.emr.dto.exception.ExceptionOutputDto
 import xyz.l7ssha.emr.dto.exception.ExceptionWithDataOutputDto
+import javax.persistence.EntityNotFoundException
 
 @ControllerAdvice
 class ExceptionControllerAdvise {
@@ -25,5 +26,10 @@ class ExceptionControllerAdvise {
             ExceptionWithDataOutputDto(HttpStatus.BAD_REQUEST.value(), validationExceptionWithData.message ?: "", validationExceptionWithData.data),
             HttpStatus.BAD_REQUEST
         )
+    }
+
+    @ExceptionHandler(EntityNotFoundException::class)
+    fun handle(): ResponseEntity.HeadersBuilder<*> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
     }
 }
