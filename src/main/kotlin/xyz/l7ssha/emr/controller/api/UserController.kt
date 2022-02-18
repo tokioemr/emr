@@ -13,6 +13,7 @@ import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
 import xyz.l7ssha.emr.mapper.UserMapper
 import xyz.l7ssha.emr.repositories.UserRepository
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,7 +27,7 @@ class UserController(@Autowired val userMapper: UserMapper, @Autowired val userR
 
     @PatchMapping("/{id}")
     @PreAuthorize("#id == authentication.principal.id or hasAuthority('ADMIN')")
-    fun patchUser(@PathVariable id: Long, @RequestBody patchDto: UserPatchInputDto): UserOutputDto {
+    fun patchUser(@PathVariable id: Long, @RequestBody @Valid patchDto: UserPatchInputDto): UserOutputDto {
         val user = userRepository.getById(id)
 
         return userMapper.userToUserOutputDto(

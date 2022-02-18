@@ -16,8 +16,8 @@ class UserMapper {
 
     fun updateUserFromPatchDto(user: User, patchDto: UserPatchInputDto): User {
         return user.apply {
-            patchDto.email.ifPresent {
-                this.email = it
+            if (patchDto.email != null) {
+                this.email = patchDto.email!!
             }
         }
     }
