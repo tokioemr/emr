@@ -3,9 +3,12 @@ package xyz.l7ssha.emr.mapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
+import xyz.l7ssha.emr.configuration.security.PermissionType
+import xyz.l7ssha.emr.dto.user.UserCreateInputDto
 import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
 import xyz.l7ssha.emr.entities.User
+import xyz.l7ssha.emr.entities.UserPermission
 
 @Component
 class UserMapper(@Autowired val passwordEncoder: PasswordEncoder) {
@@ -27,4 +30,15 @@ class UserMapper(@Autowired val passwordEncoder: PasswordEncoder) {
             }
         }
     }
+
+    fun createUserFromDto(createDto: UserCreateInputDto): User =
+        User(0L,
+            createDto.email,
+            passwordEncoder.encode(createDto.password),
+            createDto.enabled,
+            createDto.permissions.map { mapStringToUserPermission(it) }
+        )
+
+    private fun mapStringToUserPermission(permission: String): UserPermission =
+        UserPermission(0L, PermissionType.valueOf(permission))
 }
