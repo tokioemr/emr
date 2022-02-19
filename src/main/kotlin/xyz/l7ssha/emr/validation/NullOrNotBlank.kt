@@ -3,11 +3,11 @@ package xyz.l7ssha.emr.validation
 import javax.validation.Constraint
 import kotlin.reflect.KClass
 
-@Constraint(validatedBy = [ValidPasswordValidator::class])
+@Constraint(validatedBy = [NullOrNotBlankValidator::class])
 @Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class ValidPassword(
-    val message: String = "Invalid Password",
+annotation class NullOrNotBlank(
+    val message: String = "must not be blank",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<*>> = []
 )
