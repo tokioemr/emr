@@ -2,10 +2,8 @@ package xyz.l7ssha.emr.dto.security
 
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
 
 class ForgotPasswordInputDto {
-    @NotNull
     @NotBlank
     @Email
     lateinit var email: String
