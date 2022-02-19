@@ -4,7 +4,7 @@ import javax.validation.Constraint
 import kotlin.reflect.KClass
 
 @Constraint(validatedBy = [ValidPasswordValidator::class])
-@Target(AnnotationTarget.FIELD)
+@Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ValidPassword(
     val message: String = "Invalid Password",

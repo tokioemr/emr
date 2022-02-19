@@ -3,12 +3,7 @@ package xyz.l7ssha.emr.controller.api
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
 import xyz.l7ssha.emr.mapper.UserMapper
@@ -26,7 +21,7 @@ class UserController(@Autowired val userMapper: UserMapper, @Autowired val userR
     fun getUsersAction(pageable: Pageable) = userRepository.findAll(pageable).map { userMapper.userToUserOutputDto(it) }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("#id == authentication.principal.id or hasAuthority('ADMIN')")
+    @PreAuthorize("#id == authentication.principal.id or hasAuthority('CREATE_USERS')")
     fun patchUser(@PathVariable id: Long, @RequestBody @Valid patchDto: UserPatchInputDto): UserOutputDto {
         val user = userRepository.getById(id)
 

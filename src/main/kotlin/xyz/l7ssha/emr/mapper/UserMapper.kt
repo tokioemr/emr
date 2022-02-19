@@ -1,12 +1,14 @@
 package xyz.l7ssha.emr.mapper
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
 import xyz.l7ssha.emr.entities.User
 
 @Component
-class UserMapper {
+class UserMapper(@Autowired val passwordEncoder: PasswordEncoder) {
     fun userToUserOutputDto(user: User) = UserOutputDto(
         user.id,
         user.email,
@@ -18,6 +20,10 @@ class UserMapper {
         return user.apply {
             patchDto.email.ifPresent {
                 this.email = it
+            }
+
+            patchDto.password.ifPresent {
+                this.password = passwordEncoder.encode(it)
             }
         }
     }
