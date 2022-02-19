@@ -4,7 +4,7 @@ import javax.validation.Constraint
 import kotlin.reflect.KClass
 
 @Constraint(validatedBy = [NullOrNotBlankValidator::class])
-@Target(AnnotationTarget.FIELD)
+@Target(AnnotationTarget.FIELD, AnnotationTarget.TYPE)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class NullOrNotBlank(
     val message: String = "must not be blank",
