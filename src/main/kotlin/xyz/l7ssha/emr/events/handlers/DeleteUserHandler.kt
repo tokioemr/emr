@@ -18,6 +18,7 @@ class DeleteUserHandler(@Autowired val userRepository: UserRepository, @Autowire
         user.enabled = false
         user.deletedAt = Instant.now()
         user.password = passwordEncoder.encode("anonymized")
+        user.permissions.toMutableList().clear()
 
         userRepository.save(user)
     }
