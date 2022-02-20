@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*
 import xyz.l7ssha.emr.dto.user.UserCreateInputDto
 import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
-import xyz.l7ssha.emr.entities.User
 import xyz.l7ssha.emr.mapper.UserMapper
 import xyz.l7ssha.emr.repositories.UserRepository
 import javax.validation.Valid
@@ -26,10 +25,10 @@ class UserController(@Autowired val userMapper: UserMapper, @Autowired val userR
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_USERS')")
     @ResponseStatus(HttpStatus.CREATED)
-    fun postUser(@RequestBody @Valid createDto: UserCreateInputDto): User {
+    fun postUser(@RequestBody @Valid createDto: UserCreateInputDto): UserOutputDto {
         val user = userMapper.createUserFromDto(createDto)
 
-        return userRepository.save(user)
+        return userMapper.userToUserOutputDto(userRepository.save(user))
     }
 
     @PatchMapping("/{id}")
