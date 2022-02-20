@@ -1,4 +1,4 @@
-package xyz.l7ssha.emr.events.handlers
+package xyz.l7ssha.emr.events.handlers.auth
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -6,8 +6,8 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
-import xyz.l7ssha.emr.events.commands.SendEmailCommand
-import xyz.l7ssha.emr.events.commands.SendForgotPasswordEmailCommand
+import xyz.l7ssha.emr.events.commands.auth.SendEmailCommand
+import xyz.l7ssha.emr.events.commands.auth.SendForgotPasswordEmailCommand
 import xyz.l7ssha.emr.repositories.UserRepository
 import xyz.l7ssha.emr.service.ResetPasswordTokenService
 

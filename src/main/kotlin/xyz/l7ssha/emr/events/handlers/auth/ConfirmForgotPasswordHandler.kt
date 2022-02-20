@@ -1,11 +1,11 @@
-package xyz.l7ssha.emr.events.handlers
+package xyz.l7ssha.emr.events.handlers.auth
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.event.EventListener
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
-import xyz.l7ssha.emr.events.commands.ConfirmForgotPasswordCommand
+import xyz.l7ssha.emr.events.commands.auth.ConfirmForgotPasswordCommand
 import xyz.l7ssha.emr.repositories.ResetPasswordTokenRepository
 import xyz.l7ssha.emr.repositories.UserRepository
 import java.time.Instant

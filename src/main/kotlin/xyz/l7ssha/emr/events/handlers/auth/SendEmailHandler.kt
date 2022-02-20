@@ -1,4 +1,4 @@
-package xyz.l7ssha.emr.events.handlers
+package xyz.l7ssha.emr.events.handlers.auth
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.event.EventListener
@@ -6,7 +6,7 @@ import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
-import xyz.l7ssha.emr.events.commands.SendEmailCommand
+import xyz.l7ssha.emr.events.commands.auth.SendEmailCommand
 
 @Component
 class SendEmailHandler(

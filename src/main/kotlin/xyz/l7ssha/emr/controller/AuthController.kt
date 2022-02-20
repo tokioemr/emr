@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import xyz.l7ssha.emr.dto.security.*
-import xyz.l7ssha.emr.events.commands.ConfirmForgotPasswordCommand
-import xyz.l7ssha.emr.events.commands.SendForgotPasswordEmailCommand
+import xyz.l7ssha.emr.events.commands.auth.ConfirmForgotPasswordCommand
+import xyz.l7ssha.emr.events.commands.auth.SendForgotPasswordEmailCommand
 import xyz.l7ssha.emr.service.AuthService
 import javax.validation.Valid
 
