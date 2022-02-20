@@ -2,6 +2,7 @@ package xyz.l7ssha.emr.entities
 
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
+import java.time.Instant
 import javax.persistence.*
 
 @Entity
@@ -27,5 +28,11 @@ open class User (
     open val permissions: List<UserPermission> = listOf(),
 
     @Column(name = "password_expired", nullable = false)
-    open var passwordExpired: Boolean = true
+    open var passwordExpired: Boolean = true,
+
+    @Column(name = "deleted_at", nullable = true)
+    open var deletedAt: Instant? = null,
+
+    @Column(name = "created_at", nullable = true)
+    open var createdAt: Instant = Instant.now()
 )

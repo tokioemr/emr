@@ -1,0 +1,7 @@
+ALTER TABLE users
+    ADD created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_DATE;
+
+ALTER TABLE users
+    ADD deleted_at TIMESTAMP WITHOUT TIME ZONE;
+
+ALTER TABLE users_permissions DROP CONSTRAINT pk_users_permissions;
