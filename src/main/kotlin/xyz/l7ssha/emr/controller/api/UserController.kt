@@ -32,19 +32,22 @@ class UserController(
     @PreAuthorize("hasAuthority('CREATE_USERS')")
     @ResponseStatus(HttpStatus.CREATED)
     fun postUser(@RequestBody @Valid createDto: UserCreateInputDto): UserOutputDto {
-        val user = userMapper.createUserFromDto(createDto)
+        val user = userRepository.save(userMapper.createUserFromDto(createDto))
 
-        return userMapper.userToUserOutputDto(userRepository.save(user))
+        return userMapper.userToUserOutputDto(user)
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("#id == authentication.principal.id or hasAuthority('CREATE_USERS')")
     fun patchUser(@PathVariable id: Long, @RequestBody @Valid patchDto: UserPatchInputDto): UserOutputDto {
-        val user = userRepository.getById(id)
-
-        return userMapper.userToUserOutputDto(
-            userRepository.save(userMapper.updateUserFromPatchDto(user, patchDto))
+        val savedUser = userRepository.save(
+            userMapper.updateUserFromPatchDto(
+                userRepository.getById(id),
+                patchDto
+            )
         )
+
+        return userMapper.userToUserOutputDto(savedUser)
     }
 
     @DeleteMapping("/{id}")
