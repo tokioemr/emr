@@ -7,6 +7,8 @@ plugins {
     kotlin("kapt") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.jpa") version "1.6.10"
+
+    id("com.adarshr.test-logger") version "3.1.0"
 }
 
 group = "xyz.l7ssha"
@@ -45,6 +47,9 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     implementation("org.junit.jupiter:junit-jupiter:5.8.2")
 
+    testImplementation("com.h2database:h2")
+    testImplementation("com.icegreen:greenmail-junit5:1.6.5")
+
     implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
 }
 
@@ -55,6 +60,6 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-tasks.withType<Test> {
+tasks.named<Test>("test") {
     useJUnitPlatform()
 }

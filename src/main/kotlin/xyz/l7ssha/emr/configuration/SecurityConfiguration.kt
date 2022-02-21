@@ -15,19 +15,15 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import xyz.l7ssha.emr.configuration.security.JwtAuthenticationEntryPoint
 import xyz.l7ssha.emr.configuration.security.JwtRequestFilter
-import xyz.l7ssha.emr.service.UserDetailsService as UserDetailsServiceSelf
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
-    private lateinit var userDetailsService: UserDetailsServiceSelf
+    private lateinit var userDetailsService: UserDetailsService
 
-    @Autowired
-    private lateinit var unauthorizedHandler: JwtAuthenticationEntryPoint
 
     @Bean
     fun authenticationJwtTokenFilter(): JwtRequestFilter {
@@ -40,7 +36,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     public override fun configure(authenticationManagerBuilder: AuthenticationManagerBuilder) {
-        authenticationManagerBuilder.userDetailsService<UserDetailsService>(userDetailsService)
+        authenticationManagerBuilder.userDetailsService(userDetailsService)
             .passwordEncoder(passwordEncoder())
     }
 
@@ -56,8 +52,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable()
-            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
-            .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests().antMatchers("/api/auth/**", "/docs/**").permitAll()
             .anyRequest().authenticated()
 
