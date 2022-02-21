@@ -26,12 +26,8 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Build
-      uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
-      with:
-        arguments: build
-        
+    - name: Grant Permissions to gradlew
+      run: chmod +x gradlew
+
     - name: Test
-      uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
-      with:
-        arguments: test
+      run: gradle test --tests "*"
