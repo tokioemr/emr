@@ -7,7 +7,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.post
 import xyz.l7ssha.emr.ApiControllerTestCase
 
-class AuthControllerTest : ApiControllerTestCase() {
+class AuthControllerTest: ApiControllerTestCase() {
     @Test
     fun loginEmptyBody() {
         mockMvc.post("/api/auth/login").andExpect { status { isEqualTo(400) }}
@@ -26,22 +26,6 @@ class AuthControllerTest : ApiControllerTestCase() {
         }.andExpect {
             status { isBadRequest() }
             content { string(containsString("must be a well-formed email address")) }
-        }
-    }
-
-    @Test
-    fun loginInvalidPassword() {
-        val json = ObjectMapper().writeValueAsString(mapOf(
-            "email" to "admin@example.com",
-            "password" to "password"
-        ))
-
-        mockMvc.post("/api/auth/login") {
-            content = json
-            contentType = MediaType.APPLICATION_JSON
-        }.andExpect {
-            status { isBadRequest() }
-            content { string(containsString("Invalid password")) }
         }
     }
 }
