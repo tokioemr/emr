@@ -15,6 +15,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '11'
+        distribution: 'adopt'
 
     - uses: burrunan/gradle-cache-action@v1
       name: Run detekt
@@ -33,6 +34,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+          distribution: 'adopt'
 
       - uses: burrunan/gradle-cache-action@v1
         name: Run detekt
@@ -51,6 +53,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+          distribution: 'adopt'
 
       - uses: burrunan/gradle-cache-action@v1
         name: Run detekt
