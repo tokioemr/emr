@@ -56,6 +56,13 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
 }
 
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config = files("$projectDir/config/detekt.yml")
+    baseline = file("$projectDir/config/baseline.xml")
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict", "-Xemit-jvm-type-annotations")
@@ -67,16 +74,9 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-detekt {
-    buildUponDefaultConfig = true // preconfigure defaults
-    allRules = false // activate all available (even unstable) rules.
-    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
-    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
-}
-
 tasks.withType<Detekt>().configureEach {
     reports {
-        html.required.set(true) // observe findings in your browser with structure and code snippets
+        html.required.set(true)
     }
 }
 
