@@ -23,6 +23,8 @@ jobs:
         job-id: jdk${{ matrix.jdk }}
         arguments: --scan --no-parallel --no-daemon assemble
         gradle-distribution-sha-256-sum-warning: false
+        concurrent: true
+        save-generated-gradle-jars: true
 
   lint:
     runs-on: ubuntu-latest
@@ -43,6 +45,8 @@ jobs:
           job-id: jdk${{ matrix.jdk }}
           arguments: --scan --no-parallel --no-daemon detekt detektTest
           gradle-distribution-sha-256-sum-warning: false
+          concurrent: true
+          save-generated-gradle-jars: true
 
   test:
     runs-on: ubuntu-latest
@@ -63,6 +67,8 @@ jobs:
           job-id: jdk${{ matrix.jdk }}
           arguments: --scan --no-parallel --no-daemon test --tests "*"
           gradle-distribution-sha-256-sum-warning: false
+          concurrent: true
+          save-generated-gradle-jars: true
 
   build-image:
     runs-on: ubuntu-latest
