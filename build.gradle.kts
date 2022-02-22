@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -9,6 +11,7 @@ plugins {
     kotlin("plugin.jpa") version "1.6.10"
 
     id("com.adarshr.test-logger") version "3.1.0"
+    id("io.gitlab.arturbosch.detekt") version("1.19.0")
 }
 
 group = "xyz.l7ssha"
@@ -62,4 +65,24 @@ tasks.withType<KotlinCompile> {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+}
+
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
+}
+
+tasks.withType<Detekt>().configureEach {
+    reports {
+        html.required.set(true) // observe findings in your browser with structure and code snippets
+    }
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = "11"
+}
+tasks.withType<DetektCreateBaselineTask>().configureEach {
+    jvmTarget = "11"
 }
