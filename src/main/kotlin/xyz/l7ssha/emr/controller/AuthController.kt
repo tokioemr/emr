@@ -28,7 +28,10 @@ class AuthController(
 
     @PostMapping("/refresh")
     fun refreshAction(@Valid @RequestBody jwtRefreshInputDto: JwtRefreshInputDto): JwtResultOutputDto {
-        val (jwtToken, refreshToken) = authService.authWithRefreshToken(jwtRefreshInputDto.refreshToken, jwtRefreshInputDto.email)
+        val (jwtToken, refreshToken) = authService.authWithRefreshToken(
+            jwtRefreshInputDto.refreshToken,
+            jwtRefreshInputDto.email
+        )
 
         return JwtResultOutputDto(jwtToken, refreshToken)
     }

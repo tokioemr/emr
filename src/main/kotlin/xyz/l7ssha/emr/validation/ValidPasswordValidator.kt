@@ -4,11 +4,14 @@ import org.passay.*
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
+private const val MIN_PASSWORD_LENGTH = 8
 
-class ValidPasswordValidator: ConstraintValidator<ValidPassword, String> {
+private const val MAX_PASSWORD_LENGTH = 16
+
+class ValidPasswordValidator : ConstraintValidator<ValidPassword, String> {
     override fun isValid(value: String, context: ConstraintValidatorContext): Boolean {
         val validator = PasswordValidator(
-            LengthRule(8, 16),
+            LengthRule(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH),
             CharacterRule(EnglishCharacterData.LowerCase, 1),
             CharacterRule(EnglishCharacterData.UpperCase, 1),
             CharacterRule(EnglishCharacterData.Digit, 1),

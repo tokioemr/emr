@@ -23,7 +23,8 @@ class UserController(
     @Autowired val eventPublisher: ApplicationEventPublisher
 ) {
     @GetMapping("/{id}")
-    fun getUserAction(@PathVariable id: Long): UserOutputDto = userMapper.userToUserOutputDto(userRepository.getById(id))
+    fun getUserAction(@PathVariable id: Long): UserOutputDto =
+        userMapper.userToUserOutputDto(userRepository.getById(id))
 
     @GetMapping
     fun getUsersAction(pageable: Pageable) = userRepository.findAll(pageable).map { userMapper.userToUserOutputDto(it) }

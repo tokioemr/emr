@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc
 @Import(EmrTestConfiguration::class)
 @AutoConfigureMockMvc
 @SpringBootTest
-class ApiControllerTestCase {
+open class ApiControllerTestCase {
     @Autowired
     protected lateinit var mockMvc: MockMvc
 }

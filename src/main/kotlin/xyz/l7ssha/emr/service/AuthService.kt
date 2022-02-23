@@ -1,16 +1,15 @@
 package xyz.l7ssha.emr.service
 
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Service
-import org.springframework.util.StringUtils
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationExceptionWithData
 import xyz.l7ssha.emr.configuration.exception.JwtApplicationException
@@ -18,9 +17,12 @@ import xyz.l7ssha.emr.entities.RefreshToken
 import xyz.l7ssha.emr.entities.User
 import xyz.l7ssha.emr.repositories.RefreshTokenRepository
 import xyz.l7ssha.emr.repositories.UserRepository
+import java.security.SignatureException
 import java.time.Instant
 import java.util.*
 import javax.servlet.http.HttpServletRequest
+
+private const val BEARER_TOKEN_OFFSET = 7
 
 @Service
 class AuthService(
@@ -46,15 +48,16 @@ class AuthService(
         return Pair(generateJwtToken(user), refreshToken.refreshToken)
     }
 
-    fun authWithPassword(email: String, password: String) : Pair<String, String> {
+    fun authWithPassword(email: String, password: String): Pair<String, String> {
         val user = userRepository.findByEmail(email)
         if (user.isEmpty) {
             throw JwtApplicationException("Missing user")
         }
 
-        if (user.get().passwordExpired)  {
+        if (user.get().passwordExpired) {
             throw CatchableApplicationExceptionWithData(
                 "Password expired",
+                HttpStatus.UNAUTHORIZED,
                 mapOf("token" to resetPasswordTokenService.generateResetPasswordToken(user.get()).token)
             )
         }
@@ -81,7 +84,7 @@ class AuthService(
             throw JwtApplicationException("Given email is invalid for given token")
         }
 
-        refreshTokenEntity.refreshToken = generateRefreshToken();
+        refreshTokenEntity.refreshToken = generateRefreshToken()
         refreshTokenEntity.expirationDate = generateRefreshTokenExpirationInstant()
         refreshTokenRepository.save(refreshTokenEntity)
 
@@ -91,31 +94,40 @@ class AuthService(
         )
     }
 
-    fun validateJwtForRequest(request: HttpServletRequest): Boolean {
+    fun validateJwtForRequest(request: HttpServletRequest) {
         try {
             val jwt = parseJwtFromRequest(request)
 
-            if (jwt != null && validateJwtToken(jwt)) {
+            if (jwt != null) {
+                validateJwtToken(jwt)
+
                 val email: String = getUserNameFromJwtToken(jwt)
                 val userDetails = userDetailsService.loadUserByUsername(email)
 
                 val authentication = UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.authorities
                 )
+
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
-
-                return true
             }
-        } catch (_: Exception) {}
-
-        return false
+        } catch (e: UnsupportedJwtException) {
+            throw JwtApplicationException(e.message ?: "")
+        } catch (e: MalformedJwtException) {
+            throw JwtApplicationException(e.message ?: "")
+        } catch (e: SignatureException) {
+            throw JwtApplicationException(e.message ?: "")
+        } catch (e: ExpiredJwtException) {
+            throw JwtApplicationException(e.message ?: "")
+        } catch (e: IllegalArgumentException) {
+            throw JwtApplicationException(e.message ?: "")
+        }
     }
 
     private fun parseJwtFromRequest(request: HttpServletRequest): String? {
         val headerAuth = request.getHeader("Authorization")
-        return if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            headerAuth.substring(7, headerAuth.length)
+        return if (headerAuth.isNotBlank() && headerAuth.startsWith("Bearer ")) {
+            headerAuth.substring(BEARER_TOKEN_OFFSET, headerAuth.length)
         } else null
     }
 
@@ -133,13 +145,8 @@ class AuthService(
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).body.subject
     }
 
-    private fun validateJwtToken(authToken: String?): Boolean {
-        return try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken)
-            true
-        } catch (e: Exception) {
-            false
-        }
+    private fun validateJwtToken(authToken: String?) {
+        Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken)
     }
 
     private fun generateRefreshToken() = UUID.randomUUID().toString()
@@ -148,7 +155,7 @@ class AuthService(
         .plusMillis(jwtRefreshExpirationMs)
 
     private fun updateOrCreateRefreshTokenEntity(user: User): RefreshToken {
-        val refreshToken = generateRefreshToken();
+        val refreshToken = generateRefreshToken()
         val expirationInstant = generateRefreshTokenExpirationInstant()
 
         val refreshTokenEntity = refreshTokenRepository.getByUser(user)

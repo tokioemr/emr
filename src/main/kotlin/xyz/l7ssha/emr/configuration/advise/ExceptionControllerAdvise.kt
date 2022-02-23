@@ -15,16 +15,24 @@ class ExceptionControllerAdvise {
     @ExceptionHandler(CatchableApplicationException::class)
     fun handle(catchableApplicationException: CatchableApplicationException): ResponseEntity<ExceptionOutputDto> {
         return ResponseEntity(
-            ExceptionOutputDto(HttpStatus.BAD_REQUEST.value(), catchableApplicationException.message ?: ""),
-            HttpStatus.BAD_REQUEST
+            ExceptionOutputDto(
+                catchableApplicationException.status.value(),
+                catchableApplicationException.message ?: ""
+            ),
+            catchableApplicationException.status
         )
     }
 
     @ExceptionHandler(CatchableApplicationExceptionWithData::class)
-    fun handle(validationExceptionWithData: CatchableApplicationExceptionWithData): ResponseEntity<ExceptionWithDataOutputDto> {
+    fun handle(
+        validationExceptionWithData: CatchableApplicationExceptionWithData
+    ): ResponseEntity<ExceptionWithDataOutputDto> {
         return ResponseEntity(
-            ExceptionWithDataOutputDto(HttpStatus.BAD_REQUEST.value(), validationExceptionWithData.message ?: "", validationExceptionWithData.data),
-            HttpStatus.BAD_REQUEST
+            ExceptionWithDataOutputDto(
+                validationExceptionWithData.status.value(),
+                validationExceptionWithData.message ?: "", validationExceptionWithData.data
+            ),
+            validationExceptionWithData.status
         )
     }
 

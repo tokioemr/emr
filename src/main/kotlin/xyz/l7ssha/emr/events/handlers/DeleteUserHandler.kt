@@ -9,7 +9,10 @@ import xyz.l7ssha.emr.repositories.UserRepository
 import java.time.Instant
 
 @Component
-class DeleteUserHandler(@Autowired val userRepository: UserRepository, @Autowired val passwordEncoder: PasswordEncoder) {
+class DeleteUserHandler(
+    @Autowired val userRepository: UserRepository,
+    @Autowired val passwordEncoder: PasswordEncoder
+) {
     @EventListener
     fun handle(command: DeleteUserCommand) {
         val user = userRepository.getById(command.userId)

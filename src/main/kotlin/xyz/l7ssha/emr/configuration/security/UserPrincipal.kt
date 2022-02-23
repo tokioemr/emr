@@ -7,7 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails
 import xyz.l7ssha.emr.entities.UserPermission
 
 
-class UserPrincipal(private val innerId: Long, private val innerUsername: String, private val innerPassword: String, private val innerPermissions: List<UserPermission>, private val innerEnabled: Boolean) : UserDetails {
+class UserPrincipal(
+    private val innerId: Long,
+    private val innerUsername: String,
+    private val innerPassword: String,
+    private val innerPermissions: List<UserPermission>,
+    private val innerEnabled: Boolean
+) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return innerPermissions.map { SimpleGrantedAuthority(it.name.name) }.toMutableList()
     }

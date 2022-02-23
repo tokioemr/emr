@@ -20,10 +20,9 @@ import xyz.l7ssha.emr.configuration.security.JwtRequestFilter
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     @Autowired
     private lateinit var userDetailsService: UserDetailsService
-
 
     @Bean
     fun authenticationJwtTokenFilter(): JwtRequestFilter {

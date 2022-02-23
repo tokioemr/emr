@@ -26,9 +26,13 @@ class ResetPasswordTokenService(
             resetPasswordTokenRepository.delete(it)
         }
 
-        val resetPasswordToken = ResetPasswordToken(0L, user, UUID.randomUUID().toString(), now.plusMillis(forgotPasswordExpirationMs))
-        resetPasswordTokenRepository.save(resetPasswordToken)
-
-        return resetPasswordToken
+        return resetPasswordTokenRepository.save(
+            ResetPasswordToken(
+                0L,
+                user,
+                UUID.randomUUID().toString(),
+                now.plusMillis(forgotPasswordExpirationMs)
+            )
+        )
     }
 }
