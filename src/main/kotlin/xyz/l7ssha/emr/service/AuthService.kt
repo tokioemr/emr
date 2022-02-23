@@ -126,7 +126,8 @@ class AuthService(
 
     private fun parseJwtFromRequest(request: HttpServletRequest): String? {
         val headerAuth = request.getHeader("Authorization")
-        return if (headerAuth.isNotBlank() && headerAuth.startsWith("Bearer ")) {
+
+        return if (headerAuth != null && headerAuth.isNotBlank() && headerAuth.startsWith("Bearer ")) {
             headerAuth.substring(BEARER_TOKEN_OFFSET, headerAuth.length)
         } else null
     }
