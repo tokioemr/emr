@@ -35,7 +35,7 @@ class AuthService(
     @Value("\${jwt.expirationMs}") val jwtExpirationMs: Long = 60000L,
     @Value("\${jwt.refreshExpirationMs}") val jwtRefreshExpirationMs: Long = 60000L
 ) {
-    fun registerUser(email: String, password: String) : Pair<String, String> {
+    fun registerUser(email: String, password: String): Pair<String, String> {
         if (userRepository.findByEmail(email).isPresent) {
             throw CatchableApplicationException("User with given email already exists")
         }
@@ -133,10 +133,12 @@ class AuthService(
     }
 
     private fun generateJwtToken(user: User): String {
+        val now = Instant.now()
+
         return Jwts.builder()
             .setSubject(user.email)
-            .setIssuedAt(Date())
-            .setExpiration(Date(Date().time + jwtExpirationMs))
+            .setIssuedAt(Date.from(now))
+            .setExpiration(Date.from(now.plusMillis(jwtExpirationMs)))
             .signWith(SignatureAlgorithm.HS512, jwtSecret)
             .addClaims(mapOf("permissions" to user.permissions.map { it.name }))
             .compact()
