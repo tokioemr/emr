@@ -9,7 +9,7 @@ class PaginationMapper {
     fun <T> pageToPageOutputDto(page: Page<T>): PageOutputDto<T> {
         return PageOutputDto(
             page.content,
-            page.number.toLong(),
+            page.number.toLong().plus(1),
             page.pageable.pageSize.toLong(),
             page.numberOfElements.toLong()
         )

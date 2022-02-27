@@ -26,7 +26,7 @@ class FilterSortMapper {
                     FilteringOperator.PART -> criteriaBuilder.like(field as Expression<String>, it.value)
                 }
 
-                criteriaBuilder.and(filteringOperator)
+                return@map criteriaBuilder.and(filteringOperator)
             }
 
             return@Specification criteriaBuilder.and(*predicates.toTypedArray())

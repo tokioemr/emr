@@ -24,7 +24,8 @@ class FilterSortParameterResolver : HandlerMethodArgumentResolver {
     ): Any? {
         val request = webRequest.nativeRequest as? HttpServletRequest ?: return null
 
-        val page = request.getParameterValues("page")?.first()?.toInt() ?: 1
+        val page = (request.getParameterValues("page")?.first()?.toInt()?.minus(1) ?: 0)
+            .coerceAtLeast(0)
         val perPage = request.getParameterValues("perPage")?.first()?.toInt() ?: DEFAULT_PER_PAGE
 
         val filters = mutableListOf<FilterInputDto>()
