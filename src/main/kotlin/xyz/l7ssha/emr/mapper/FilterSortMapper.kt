@@ -23,7 +23,7 @@ class FilterSortMapper {
 
                 val filteringOperator = when (it.filteringOperator) {
                     null, FilteringOperator.EQ -> criteriaBuilder.equal(field, it.value)
-                    FilteringOperator.PART -> criteriaBuilder.like(field as Expression<String>, it.value)
+                    FilteringOperator.PART -> criteriaBuilder.like(field as Expression<String>, "%${it.value}%")
                 }
 
                 return@map criteriaBuilder.and(filteringOperator)

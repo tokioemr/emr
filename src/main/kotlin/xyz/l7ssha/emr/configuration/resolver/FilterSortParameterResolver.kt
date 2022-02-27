@@ -49,7 +49,7 @@ class FilterSortParameterResolver : HandlerMethodArgumentResolver {
     private fun parseSortingInputString(input: String, value: String): SortingInputDto {
         val parts = input.split(",")
 
-        return SortingInputDto(parts.last(), SortingOperator.valueOf(value))
+        return SortingInputDto(parts.last(), SortingOperator.fromValue(value))
     }
 
     private fun parseFilterInputString(input: String, value: String): FilterInputDto {
@@ -58,7 +58,7 @@ class FilterSortParameterResolver : HandlerMethodArgumentResolver {
         return FilterInputDto(
             parts[1],
             value,
-            if (parts.count() == QUERY_PARTS_COUNT_FOR_OPERATOR) FilteringOperator.valueOf(parts[2]) else null
+            if (parts.count() == QUERY_PARTS_COUNT_FOR_OPERATOR) FilteringOperator.fromValue(parts[2]) else null
         )
     }
 }
