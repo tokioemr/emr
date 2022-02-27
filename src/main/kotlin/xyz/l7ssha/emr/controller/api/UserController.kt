@@ -2,16 +2,16 @@ package xyz.l7ssha.emr.controller.api
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import xyz.l7ssha.emr.dto.pagination.FilteringSortingInputDto
 import xyz.l7ssha.emr.dto.user.UserCreateInputDto
 import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
 import xyz.l7ssha.emr.events.commands.DeleteUserCommand
 import xyz.l7ssha.emr.mapper.UserMapper
-import xyz.l7ssha.emr.repositories.UserRepository
+import xyz.l7ssha.emr.service.UserService
 import javax.validation.Valid
 
 @RestController
@@ -19,21 +19,22 @@ import javax.validation.Valid
 @PreAuthorize("hasAuthority('VIEW_USERS')")
 class UserController(
     @Autowired val userMapper: UserMapper,
-    @Autowired val userRepository: UserRepository,
+    @Autowired val userService: UserService,
     @Autowired val eventPublisher: ApplicationEventPublisher
 ) {
     @GetMapping("/{id}")
     fun getUserAction(@PathVariable id: Long): UserOutputDto =
-        userMapper.userToUserOutputDto(userRepository.getById(id))
+        userMapper.userToUserOutputDto(userService.userRepository.getById(id))
 
     @GetMapping
-    fun getUsersAction(pageable: Pageable) = userRepository.findAll(pageable).map { userMapper.userToUserOutputDto(it) }
+    fun getUsersAction(filterSortDto: FilteringSortingInputDto) = userService.findAllByCustomFilters(filterSortDto)
+        .map { userMapper.userToUserOutputDto(it) }
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_USERS')")
     @ResponseStatus(HttpStatus.CREATED)
     fun postUser(@RequestBody @Valid createDto: UserCreateInputDto): UserOutputDto {
-        val user = userRepository.save(userMapper.createUserFromDto(createDto))
+        val user = userService.userRepository.save(userMapper.createUserFromDto(createDto))
 
         return userMapper.userToUserOutputDto(user)
     }
@@ -41,9 +42,9 @@ class UserController(
     @PatchMapping("/{id}")
     @PreAuthorize("#id == authentication.principal.id or hasAuthority('CREATE_USERS')")
     fun patchUser(@PathVariable id: Long, @RequestBody @Valid patchDto: UserPatchInputDto): UserOutputDto {
-        val savedUser = userRepository.save(
+        val savedUser = userService.userRepository.save(
             userMapper.updateUserFromPatchDto(
-                userRepository.getById(id),
+                userService.userRepository.getById(id),
                 patchDto
             )
         )

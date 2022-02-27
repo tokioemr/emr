@@ -6,13 +6,13 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.get
 import xyz.l7ssha.emr.ApiControllerTestCase
 
-class UserControllerTest: ApiControllerTestCase() {
+class UserControllerTest : ApiControllerTestCase() {
     @Test
     @WithMockUser(username = "admin@example.com", authorities = ["VIEW_USERS"])
     fun getUsersTest() {
         mockMvc.get("/api/users").andExpect {
             status { isOk() }
-            content { jsonPath("$.content.size()", Matchers.equalTo(0)) }
+            content { jsonPath("$.data.size()", Matchers.equalTo(0)) }
         }
     }
 

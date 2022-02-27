@@ -11,7 +11,7 @@ class PaginationMapper {
             page.content,
             page.number.toLong(),
             page.pageable.pageSize.toLong(),
-            page.totalElements
+            page.numberOfElements.toLong()
         )
     }
 }
