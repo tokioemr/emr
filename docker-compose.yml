@@ -1,5 +1,8 @@
 version: '3'
 
+volumes:
+  pgdata:
+
 services:
   app:
     build: .
@@ -29,7 +32,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./pgdata:/pgdata
+      - pgdata:/pgdata
       - /etc/passwd:/etc/passwd:ro
     user: 1000:1000
 
