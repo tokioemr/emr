@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.domain.Sort.Direction
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Component
+import xyz.l7ssha.emr.configuration.exception.FilterValidationException
 import xyz.l7ssha.emr.dto.pagination.FilteringOperator
 import xyz.l7ssha.emr.dto.pagination.FilteringSortingInputDto
 import xyz.l7ssha.emr.dto.pagination.SortingOperator
@@ -19,7 +20,11 @@ class FilterSortMapper {
             }
 
             val predicates = filteringSortingDto.filters.map {
-                val field = root.get<T>(it.field)
+                val field = try {
+                    root.get<T>(it.field)
+                } catch (_: IllegalArgumentException) {
+                    throw FilterValidationException(it.field)
+                }
 
                 val filteringOperator = when (it.filteringOperator) {
                     null, FilteringOperator.EQ -> criteriaBuilder.equal(field, it.value)
