@@ -4,7 +4,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.domain.Sort.Direction
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Component
-import xyz.l7ssha.emr.configuration.exception.FilterValidationException
+import xyz.l7ssha.emr.configuration.exception.InvalidFieldFilterValidationException
 import xyz.l7ssha.emr.dto.pagination.FilteringOperator
 import xyz.l7ssha.emr.dto.pagination.FilteringSortingInputDto
 import xyz.l7ssha.emr.dto.pagination.SortingOperator
@@ -23,12 +23,18 @@ class FilterSortMapper {
                 val field = try {
                     root.get<T>(it.field)
                 } catch (_: IllegalArgumentException) {
-                    throw FilterValidationException(it.field)
+                    throw InvalidFieldFilterValidationException(it.field)
                 }
 
                 val filteringOperator = when (it.filteringOperator) {
                     null, FilteringOperator.EQ -> criteriaBuilder.equal(field, it.value)
                     FilteringOperator.PART -> criteriaBuilder.like(field as Expression<String>, "%${it.value}%")
+                    FilteringOperator.I_PART ->
+                        criteriaBuilder.like(criteriaBuilder.lower(field as Expression<String>), "%${it.value}%")
+                    FilteringOperator.GT -> criteriaBuilder.gt(field as Expression<out Number>, it.value.toDouble())
+                    FilteringOperator.GTE -> criteriaBuilder.ge(field as Expression<out Number>, it.value.toDouble())
+                    FilteringOperator.LT -> criteriaBuilder.lt(field as Expression<out Number>, it.value.toDouble())
+                    FilteringOperator.LTE -> criteriaBuilder.le(field as Expression<out Number>, it.value.toDouble())
                 }
 
                 return@map criteriaBuilder.and(filteringOperator)

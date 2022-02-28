@@ -21,11 +21,26 @@ enum class SortingOperator(val operatorName: String) {
 
 enum class FilteringOperator(val operatorName: String) {
     PART("part"),
-    EQ("eq");
-//    LT("lt"),
-//    GT("gt")
+    I_PART("ipart"),
+    EQ("eq"),
+    LT("lt"),
+    GT("gt"),
+    LTE("lte"),
+    GTE("gte");
 
     companion object {
+        val stringOperators = listOf(
+            PART,
+            I_PART,
+        )
+
+        val numberOperators = listOf(
+            LT,
+            LTE,
+            GT,
+            GTE,
+        )
+
         fun fromValue(value: String) = values().first { it.operatorName == value }
     }
 }
