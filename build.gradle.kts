@@ -54,6 +54,9 @@ dependencies {
     testImplementation("com.icegreen:greenmail-junit5:1.6.5")
 
     implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
+
+    kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
+    implementation("com.querydsl:querydsl-jpa:5.0.0")
 }
 
 detekt {

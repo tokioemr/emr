@@ -13,6 +13,7 @@ import xyz.l7ssha.emr.mapper.ExceptionMapper
 import javax.persistence.EntityNotFoundException
 
 @ControllerAdvice
+@Suppress("UnusedPrivateMember")
 class ExceptionControllerAdvise {
     @Autowired
     lateinit var exceptionMapper: ExceptionMapper
@@ -36,7 +37,7 @@ class ExceptionControllerAdvise {
     }
 
     @ExceptionHandler(EntityNotFoundException::class)
-    fun handle(): ResponseEntity.HeadersBuilder<*> {
+    fun handle(e: EntityNotFoundException): ResponseEntity.HeadersBuilder<*> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
     }
 }
