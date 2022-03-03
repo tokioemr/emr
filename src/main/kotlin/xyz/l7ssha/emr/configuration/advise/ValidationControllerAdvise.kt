@@ -25,6 +25,6 @@ class ValidationControllerAdvise : ResponseEntityExceptionHandler() {
             errors[fieldName] = error.defaultMessage
         }
 
-        return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
+        return ResponseEntity(errors, HttpStatus.UNPROCESSABLE_ENTITY)
     }
 }
