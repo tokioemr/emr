@@ -14,7 +14,7 @@ import xyz.l7ssha.emr.mapper.PaginationMapper
 @ControllerAdvice
 class PageResponseControllerAdvice(@Autowired val paginationMapper: PaginationMapper) : ResponseBodyAdvice<Any?> {
     override fun supports(returnType: MethodParameter, converterType: Class<out HttpMessageConverter<*>>): Boolean {
-//        return Page::class.java.isAssignableFrom(returnType.parameterType)
+        // TODO Powinno byc sprawdzane czy type jest Page<*>
         return true
     }
 

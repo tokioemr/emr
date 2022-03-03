@@ -28,9 +28,17 @@ class JwtRequestFilter : OncePerRequestFilter() {
         } catch (exception: CatchableApplicationException) {
             response.status = exception.status.value()
             response.writer.write(convertObjectToJson(exceptionMapper.catchableExceptionToDto(exception)))
+            response.addHeader("Content-Type", "application/json")
+            response.writer.flush()
+
+            return@doFilterInternal
         } catch (exceptionWithData: CatchableApplicationExceptionWithData) {
             response.status = exceptionWithData.status.value()
             response.writer.write(convertObjectToJson(exceptionMapper.catchableExceptionToDto(exceptionWithData)))
+            response.addHeader("Content-Type", "application/json")
+            response.writer.flush()
+
+            return@doFilterInternal
         }
 
         filterChain.doFilter(request, response)

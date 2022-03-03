@@ -9,7 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
-import java.util.function.Consumer
 
 @ControllerAdvice
 class ValidationControllerAdvise : ResponseEntityExceptionHandler() {
@@ -21,10 +20,10 @@ class ValidationControllerAdvise : ResponseEntityExceptionHandler() {
     ): ResponseEntity<Any> {
         val errors: MutableMap<String, String?> = HashMap()
 
-        ex.bindingResult.allErrors.forEach(Consumer { error: ObjectError ->
+        ex.bindingResult.allErrors.forEach { error: ObjectError ->
             val fieldName = (error as FieldError).field
-            errors[fieldName] =  error.defaultMessage
-        })
+            errors[fieldName] = error.defaultMessage
+        }
 
         return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
     }
