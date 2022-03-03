@@ -2,10 +2,8 @@ package xyz.l7ssha.emr.configuration.security
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-
 import org.springframework.security.core.userdetails.UserDetails
 import xyz.l7ssha.emr.entities.UserPermission
-
 
 class UserPrincipal(
     private val innerId: Long,

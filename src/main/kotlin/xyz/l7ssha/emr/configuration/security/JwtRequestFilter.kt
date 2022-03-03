@@ -26,22 +26,31 @@ class JwtRequestFilter : OncePerRequestFilter() {
         try {
             authService.validateJwtForRequest(request)
         } catch (exception: CatchableApplicationException) {
-            response.status = exception.status.value()
-            response.writer.write(convertObjectToJson(exceptionMapper.catchableExceptionToDto(exception)))
-            response.addHeader("Content-Type", "application/json")
-            response.writer.flush()
+          writeResponse(
+                response,
+                convertObjectToJson(exceptionMapper.catchableExceptionToDto(exception)),
+                exception.status.value(),
+            )
 
-            return@doFilterInternal
+            return
         } catch (exceptionWithData: CatchableApplicationExceptionWithData) {
-            response.status = exceptionWithData.status.value()
-            response.writer.write(convertObjectToJson(exceptionMapper.catchableExceptionToDto(exceptionWithData)))
-            response.addHeader("Content-Type", "application/json")
-            response.writer.flush()
+            writeResponse(
+                response,
+                convertObjectToJson(exceptionMapper.catchableExceptionToDto(exceptionWithData)),
+                exceptionWithData.status.value(),
+            )
 
-            return@doFilterInternal
+            return
         }
 
         filterChain.doFilter(request, response)
+    }
+
+    private fun writeResponse(response: HttpServletResponse, body: String, status: Int) {
+        response.status = status
+        response.writer.write(body)
+        response.addHeader("Content-Type", "application/json")
+        response.writer.flush()
     }
 
     private fun convertObjectToJson(obj: Any): String {

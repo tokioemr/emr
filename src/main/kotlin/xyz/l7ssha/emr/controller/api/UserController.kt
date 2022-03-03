@@ -26,6 +26,7 @@ class UserController(
     @Autowired val eventPublisher: ApplicationEventPublisher
 ) {
     @GetMapping("/{id}")
+    @PreAuthorize("#id == authentication.principal.id or hasAuthority('VIEW_USERS')")
     fun getUserAction(@PathVariable id: Long): UserOutputDto =
         userMapper.userToUserOutputDto(userRepository.getById(id))
 
