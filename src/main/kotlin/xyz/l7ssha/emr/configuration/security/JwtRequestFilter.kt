@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.filter.OncePerRequestFilter
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
-import xyz.l7ssha.emr.configuration.exception.CatchableApplicationExceptionWithData
+import xyz.l7ssha.emr.configuration.exception.CatchableApplicationWithDataException
 import xyz.l7ssha.emr.mapper.ExceptionMapper
 import xyz.l7ssha.emr.service.AuthService
 import javax.servlet.FilterChain
@@ -26,14 +26,14 @@ class JwtRequestFilter : OncePerRequestFilter() {
         try {
             authService.validateJwtForRequest(request)
         } catch (exception: CatchableApplicationException) {
-          writeResponse(
+            writeResponse(
                 response,
                 convertObjectToJson(exceptionMapper.catchableExceptionToDto(exception)),
                 exception.status.value(),
             )
 
             return
-        } catch (exceptionWithData: CatchableApplicationExceptionWithData) {
+        } catch (exceptionWithData: CatchableApplicationWithDataException) {
             writeResponse(
                 response,
                 convertObjectToJson(exceptionMapper.catchableExceptionToDto(exceptionWithData)),

@@ -2,7 +2,7 @@ package xyz.l7ssha.emr.mapper
 
 import org.springframework.stereotype.Component
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
-import xyz.l7ssha.emr.configuration.exception.CatchableApplicationExceptionWithData
+import xyz.l7ssha.emr.configuration.exception.CatchableApplicationWithDataException
 import xyz.l7ssha.emr.dto.exception.ExceptionOutputDto
 import xyz.l7ssha.emr.dto.exception.ExceptionWithDataOutputDto
 
@@ -15,7 +15,7 @@ class ExceptionMapper {
         )
     }
 
-    fun catchableExceptionWithDataToDto(exception: CatchableApplicationExceptionWithData): ExceptionWithDataOutputDto {
+    fun catchableExceptionWithDataToDto(exception: CatchableApplicationWithDataException): ExceptionWithDataOutputDto {
         return ExceptionWithDataOutputDto(
             exception.status.value(),
             exception.message ?: "",

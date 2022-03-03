@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
-import xyz.l7ssha.emr.configuration.exception.CatchableApplicationExceptionWithData
+import xyz.l7ssha.emr.configuration.exception.CatchableApplicationWithDataException
 import xyz.l7ssha.emr.dto.exception.ExceptionOutputDto
 import xyz.l7ssha.emr.dto.exception.ExceptionWithDataOutputDto
 import xyz.l7ssha.emr.mapper.ExceptionMapper
@@ -26,9 +26,9 @@ class ExceptionControllerAdvise {
         )
     }
 
-    @ExceptionHandler(CatchableApplicationExceptionWithData::class)
+    @ExceptionHandler(CatchableApplicationWithDataException::class)
     fun handle(
-        exceptionWithData: CatchableApplicationExceptionWithData
+        exceptionWithData: CatchableApplicationWithDataException
     ): ResponseEntity<ExceptionWithDataOutputDto> {
         return ResponseEntity(
             exceptionMapper.catchableExceptionWithDataToDto(exceptionWithData),
