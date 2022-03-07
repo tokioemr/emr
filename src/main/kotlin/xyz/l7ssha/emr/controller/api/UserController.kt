@@ -1,17 +1,15 @@
 package xyz.l7ssha.emr.controller.api
 
-import com.querydsl.core.types.Predicate
+import io.github.perplexhub.rsql.RSQLJPASupport
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.data.domain.Pageable
-import org.springframework.data.querydsl.binding.QuerydslPredicate
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import xyz.l7ssha.emr.dto.user.UserCreateInputDto
 import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
-import xyz.l7ssha.emr.entities.User
+import xyz.l7ssha.emr.entities.user.User
 import xyz.l7ssha.emr.events.commands.DeleteUserCommand
 import xyz.l7ssha.emr.mapper.UserMapper
 import xyz.l7ssha.emr.repositories.UserRepository
@@ -31,8 +29,8 @@ class UserController(
         userMapper.userToUserOutputDto(userRepository.getById(id))
 
     @GetMapping
-    fun getUsersAction(@QuerydslPredicate(root = User::class) predicate: Predicate, pageable: Pageable) =
-        userRepository.findAll(predicate, pageable)
+    fun getUsersAction(query: String, sort: String) =
+        userRepository.findAll(RSQLJPASupport.toSpecification<User>(query).and(RSQLJPASupport.toSort(sort)))
             .map { userMapper.userToUserOutputDto(it) }
 
     @PostMapping

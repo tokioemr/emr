@@ -1,8 +1,8 @@
-package xyz.l7ssha.emr.entities
+package xyz.l7ssha.emr.entities.user
 
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
-import java.time.Instant
+import xyz.l7ssha.emr.entities.AbstractSoftDelete
 import javax.persistence.*
 
 @Entity
@@ -24,15 +24,9 @@ open class User(
 
     @ManyToMany(targetEntity = UserPermission::class, cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinColumn(name = "user_permissions", referencedColumnName = "id")
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SUBSELECT)
     open val permissions: List<UserPermission> = mutableListOf(),
 
     @Column(name = "password_expired", nullable = false)
-    open var passwordExpired: Boolean = true,
-
-    @Column(name = "deleted_at", nullable = true)
-    open var deletedAt: Instant? = null,
-
-    @Column(name = "created_at", nullable = true)
-    open var createdAt: Instant = Instant.now()
-)
+    open var passwordExpired: Boolean = true
+) : AbstractSoftDelete()

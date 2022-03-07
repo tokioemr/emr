@@ -7,8 +7,8 @@ import xyz.l7ssha.emr.configuration.security.PermissionType
 import xyz.l7ssha.emr.dto.user.UserCreateInputDto
 import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
-import xyz.l7ssha.emr.entities.User
-import xyz.l7ssha.emr.entities.UserPermission
+import xyz.l7ssha.emr.entities.user.User
+import xyz.l7ssha.emr.entities.user.UserPermission
 
 @Component
 class UserMapper(@Autowired val passwordEncoder: PasswordEncoder) {

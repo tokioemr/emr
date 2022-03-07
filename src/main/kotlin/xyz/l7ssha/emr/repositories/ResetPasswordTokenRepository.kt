@@ -2,8 +2,8 @@ package xyz.l7ssha.emr.repositories
 
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import xyz.l7ssha.emr.entities.ResetPasswordToken
-import xyz.l7ssha.emr.entities.User
+import xyz.l7ssha.emr.entities.user.ResetPasswordToken
+import xyz.l7ssha.emr.entities.user.User
 import java.util.*
 
 @Repository

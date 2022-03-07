@@ -1,4 +1,4 @@
-package xyz.l7ssha.emr.entities
+package xyz.l7ssha.emr.entities.user
 
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode

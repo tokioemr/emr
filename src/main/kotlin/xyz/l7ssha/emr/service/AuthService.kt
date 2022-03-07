@@ -11,10 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Service
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
-import xyz.l7ssha.emr.configuration.exception.CatchableApplicationExceptionWithData
+import xyz.l7ssha.emr.configuration.exception.CatchableApplicationWithDataException
 import xyz.l7ssha.emr.configuration.exception.JwtApplicationException
-import xyz.l7ssha.emr.entities.RefreshToken
-import xyz.l7ssha.emr.entities.User
+import xyz.l7ssha.emr.entities.user.RefreshToken
+import xyz.l7ssha.emr.entities.user.User
 import xyz.l7ssha.emr.repositories.RefreshTokenRepository
 import xyz.l7ssha.emr.repositories.UserRepository
 import java.security.SignatureException
@@ -55,7 +55,7 @@ class AuthService(
         }
 
         if (user.get().passwordExpired) {
-            throw CatchableApplicationExceptionWithData(
+            throw CatchableApplicationWithDataException(
                 "Password expired",
                 HttpStatus.UNAUTHORIZED,
                 mapOf("token" to resetPasswordTokenService.generateResetPasswordToken(user.get()).token)

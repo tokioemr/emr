@@ -57,6 +57,7 @@ dependencies {
 
     kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
     implementation("com.querydsl:querydsl-jpa:5.0.0")
+    implementation("io.github.perplexhub:rsql-querydsl-spring-boot-starter:5.0.19")
 }
 
 detekt {
