@@ -2,6 +2,7 @@ package xyz.l7ssha.emr.configuration.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationWithDataException
@@ -11,6 +12,7 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@Component
 class JwtRequestFilter : OncePerRequestFilter() {
     @Autowired
     lateinit var authService: AuthService

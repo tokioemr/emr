@@ -40,7 +40,7 @@ class AuthService(
             throw CatchableApplicationException("User with given email already exists")
         }
 
-        val user = User(0L, email, passwordEncoder.encode(password), true, emptyList(), false).apply {
+        val user = User(0L, email, passwordEncoder.encode(password), true, emptySet(), false).apply {
             userRepository.save(this)
         }
 

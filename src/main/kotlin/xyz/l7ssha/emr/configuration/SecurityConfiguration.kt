@@ -40,7 +40,6 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     }
 
     @Bean
-    @Throws(Exception::class)
     override fun authenticationManagerBean(): AuthenticationManager {
         return super.authenticationManagerBean()
     }
@@ -52,7 +51,8 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and().authorizeRequests().antMatchers("/api/auth/**", "/docs/**").permitAll()
+            .and().authorizeRequests()
+            .antMatchers("/api/auth/**", "/docs/**").permitAll()
             .anyRequest().authenticated()
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)

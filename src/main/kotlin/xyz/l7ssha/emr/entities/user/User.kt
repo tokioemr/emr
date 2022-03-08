@@ -1,7 +1,5 @@
 package xyz.l7ssha.emr.entities.user
 
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import xyz.l7ssha.emr.entities.AbstractSoftDelete
 import javax.persistence.*
 
@@ -22,10 +20,9 @@ open class User(
     @Column(name = "enabled", nullable = false)
     open var enabled: Boolean = false,
 
-    @ManyToMany(targetEntity = UserPermission::class, cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "user_permissions", referencedColumnName = "id")
-    @Fetch(FetchMode.SUBSELECT)
-    open val permissions: List<UserPermission> = mutableListOf(),
+    open val permissions: Set<UserPermission>,
 
     @Column(name = "password_expired", nullable = false)
     open var passwordExpired: Boolean = true

@@ -9,7 +9,7 @@ class UserPrincipal(
     private val innerId: Long,
     private val innerUsername: String,
     private val innerPassword: String,
-    private val innerPermissions: List<UserPermission>,
+    private val innerPermissions: Set<UserPermission>,
     private val innerEnabled: Boolean
 ) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {

@@ -26,7 +26,7 @@ class AuthControllerTest : ApiControllerTestCase() {
             content = json
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest() }
+            status { isUnprocessableEntity() }
             content { string(containsString("must be a well-formed email address")) }
         }
     }

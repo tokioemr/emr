@@ -36,7 +36,7 @@ class UserMapper(@Autowired val passwordEncoder: PasswordEncoder) {
             createDto.email,
             passwordEncoder.encode(createDto.password),
             createDto.enabled,
-            createDto.permissions.map { mapStringToUserPermission(it) }
+            createDto.permissions.map { mapStringToUserPermission(it) }.toSet()
         )
 
     private fun mapStringToUserPermission(permission: String): UserPermission =
