@@ -1,29 +1,22 @@
 package xyz.l7ssha.emr.validation
 
-import org.passay.*
+import org.passay.PasswordData
+import org.passay.PasswordValidator
+import org.springframework.beans.factory.annotation.Autowired
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
-private const val MIN_PASSWORD_LENGTH = 8
-
-private const val MAX_PASSWORD_LENGTH = 16
-
 class ValidPasswordValidator : ConstraintValidator<ValidPassword, String> {
-    override fun isValid(value: String, context: ConstraintValidatorContext): Boolean {
-        val validator = PasswordValidator(
-            LengthRule(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH),
-            CharacterRule(EnglishCharacterData.LowerCase, 1),
-            CharacterRule(EnglishCharacterData.UpperCase, 1),
-            CharacterRule(EnglishCharacterData.Digit, 1),
-            WhitespaceRule(),
-        )
+    @Autowired
+    lateinit var passwordValidator: PasswordValidator
 
-        val result = validator.validate(PasswordData(value))
+    override fun isValid(value: String, context: ConstraintValidatorContext): Boolean {
+        val result = passwordValidator.validate(PasswordData(value))
         if (result.isValid) {
             return true
         }
 
-        context.buildConstraintViolationWithTemplate(validator.getMessages(result).joinToString(","))
+        context.buildConstraintViolationWithTemplate(passwordValidator.getMessages(result).joinToString(","))
             .addConstraintViolation()
             .disableDefaultConstraintViolation()
 
