@@ -8,16 +8,7 @@ import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.context.request.ServletWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
-
-data class RSQLSpecification<T>(val filters: Specification<T>?, val sorting: Specification<T>?) {
-    fun getFiltersAndSpecification(): Specification<T>? {
-        if (filters != null) {
-            return filters.and(sorting)
-        }
-
-        return sorting
-    }
-}
+import xyz.l7ssha.emr.dto.RSQLSpecification
 
 class RSQLSpecificationResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
@@ -32,10 +23,17 @@ class RSQLSpecificationResolver : HandlerMethodArgumentResolver {
     ): Any {
         val request = (webRequest as ServletWebRequest).request
 
+        // TODO: This is hack of achieving this. I should probably check properly for implemented interface and ten get the field
+        val filters = try {
+            Specification.where { root, _, criteriaBuilder -> criteriaBuilder.isNull(root.get<Any>("deletedAt")) }
+        } catch (_: java.lang.IllegalArgumentException) {
+            Specification.where<Any> { _, _, criteriaBuilder -> criteriaBuilder.conjunction() }
+        }
+
         val filtersParamValue = request.getParameter("filter")
-        val filters = if (filtersParamValue != null)
-            RSQLJPASupport.toSpecification<Any>(filtersParamValue)
-        else null
+        if (filtersParamValue != null) {
+            filters.and(RSQLJPASupport.toSpecification(filtersParamValue))
+        }
 
         val sortingParamValue = request.getParameter("sort")
         val sorting = if (sortingParamValue != null)

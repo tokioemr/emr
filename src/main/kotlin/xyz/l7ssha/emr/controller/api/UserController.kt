@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
-import xyz.l7ssha.emr.configuration.resolver.RSQLSpecification
+import xyz.l7ssha.emr.dto.RSQLSpecification
 import xyz.l7ssha.emr.dto.user.UserCreateInputDto
 import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
