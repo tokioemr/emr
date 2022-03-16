@@ -31,7 +31,7 @@ class SendForgotPasswordEmailHandler(
                 user.email,
                 "EMR password reset",
                 "You requested to reset your password to your EMR account:<br>" +
-                "Click here to reset your password: $baseUrl/forgot-password-confirm/${resetPasswordToken.token}"
+                    "Click here to reset your password: $baseUrl/forgot-password-confirm/${resetPasswordToken.token}"
             )
         )
     }
