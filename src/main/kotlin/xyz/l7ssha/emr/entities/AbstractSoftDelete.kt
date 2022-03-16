@@ -5,7 +5,7 @@ import javax.persistence.Column
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-abstract class AbstractSoftDelete : AbstractAuditableEntity() {
+open class AbstractSoftDelete : AbstractAuditableEntity() {
     @Column(name = "deleted_at", nullable = true)
     open var deletedAt: Instant? = null
 

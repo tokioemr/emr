@@ -23,7 +23,8 @@ class RSQLSpecificationResolver : HandlerMethodArgumentResolver {
     ): Any {
         val request = (webRequest as ServletWebRequest).request
 
-        // TODO: This is hack of achieving this. I should probably check properly for implemented interface and ten get the field
+        // TODO: This is hack of achieving this.
+        //  I should probably check properly for implemented interface and ten get the field
         val filters = try {
             Specification.where { root, _, criteriaBuilder -> criteriaBuilder.isNull(root.get<Any>("deletedAt")) }
         } catch (_: java.lang.IllegalArgumentException) {
