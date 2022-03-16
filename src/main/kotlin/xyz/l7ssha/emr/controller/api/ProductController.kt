@@ -1,10 +1,8 @@
 package xyz.l7ssha.emr.controller.api
 
 import org.springframework.data.domain.Pageable
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.*
 import xyz.l7ssha.emr.dto.RSQLSpecification
 import xyz.l7ssha.emr.entities.products.Product
 import xyz.l7ssha.emr.mapper.ProductMapper
@@ -22,4 +20,16 @@ class ProductController(val productMapper: ProductMapper, val productRepository:
     @GetMapping("/{id}")
     fun getItemAction(@PathVariable id: Long) =
         productRepository.getById(id).let { productMapper.productToOutputDto(it) }
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_PRODUCTS')")
+    fun postItemAction(): Nothing = TODO()
+
+    @PatchMapping
+    @PreAuthorize("hasAuthority('CREATE_PRODUCTS')")
+    fun patchItemAction(): Nothing = TODO()
+
+    @DeleteMapping
+    @PreAuthorize("hasAuthority('REMOVE_PRODUCTS')")
+    fun removeItemAction(): Nothing = TODO()
 }
