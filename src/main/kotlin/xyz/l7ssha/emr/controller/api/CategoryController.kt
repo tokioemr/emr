@@ -2,12 +2,15 @@ package xyz.l7ssha.emr.controller.api
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import xyz.l7ssha.emr.dto.RSQLSpecification
+import xyz.l7ssha.emr.dto.category.CategoryCreateInputDto
 import xyz.l7ssha.emr.entities.products.Category
 import xyz.l7ssha.emr.mapper.CategoryMapper
 import xyz.l7ssha.emr.repositories.CategoryRepository
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/categories")
@@ -26,7 +29,12 @@ class CategoryController(
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_CATEGORIES')")
-    fun postItemAction(): Nothing = TODO()
+    @ResponseStatus(HttpStatus.CREATED)
+    fun postItemAction(@RequestBody @Valid categoryDto: CategoryCreateInputDto) =
+        categoryDto
+            .let { categoryMapper.categoryCreateDtoToCategory(categoryDto) }
+            .let { categoryRepository.save(it) }
+            .let { categoryMapper.categoryToOutputDto(it) }
 
     @PatchMapping
     @PreAuthorize("hasAuthority('CREATE_CATEGORIES')")

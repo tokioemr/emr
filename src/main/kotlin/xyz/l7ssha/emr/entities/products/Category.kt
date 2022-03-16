@@ -16,7 +16,7 @@ open class Category(
     @Column(name = "name", nullable = false, unique = true)
     open var name: String,
 
-    @ManyToOne(cascade = [CascadeType.ALL])
+    @ManyToOne
     @JoinColumn(name = "parent", referencedColumnName = "id")
     @Fetch(FetchMode.JOIN)
     open var parent: Category? = null,
