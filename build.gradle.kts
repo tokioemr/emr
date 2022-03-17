@@ -55,8 +55,6 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
 
-    kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
-    implementation("com.querydsl:querydsl-jpa:5.0.0")
     implementation("io.github.perplexhub:rsql-querydsl-spring-boot-starter:5.0.19")
 }
 
@@ -69,7 +67,7 @@ detekt {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xemit-jvm-type-annotations")
+        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xemit-jvm-type-annotations", "-Xjvm-default=all")
         jvmTarget = "11"
     }
 }

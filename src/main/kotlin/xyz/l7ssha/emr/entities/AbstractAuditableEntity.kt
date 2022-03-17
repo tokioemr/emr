@@ -10,9 +10,9 @@ import javax.persistence.*
 @MappedSuperclass
 abstract class AbstractAuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
+    @JoinColumn(name = "created_by")
     @Fetch(FetchMode.JOIN)
-    open lateinit var createdBy: User
+    open var createdBy: User? = null
 
     @Column(name = "created_at", updatable = false, nullable = false)
     open val createdAt: Instant = Instant.now()
