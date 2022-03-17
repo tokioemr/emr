@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 import xyz.l7ssha.emr.entities.products.Category
 
 @Repository
-interface CategoryRepository : JpaRepository<Category, Long>, JpaSpecificationExecutor<Category>
+interface CategoryRepository :
+    JpaRepository<Category, Long>, JpaSpecificationExecutor<Category>, SoftDeletableRepository<Category>
