@@ -77,7 +77,7 @@ class CategoryControllerTest : ApiControllerTestCase() {
     @WithMockUser(authorities = ["REMOVE_CATEGORIES"])
     @Disabled("Broken controller advice handling")
     fun removeCategorySuccess() {
-        mockMvc.get("/api/categories/3") { accept = MediaType.ALL}.andExpect {
+        mockMvc.get("/api/categories/3").andExpect {
             status { isOk() }
         }
 
