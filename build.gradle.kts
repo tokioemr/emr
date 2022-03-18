@@ -55,6 +55,8 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
 
+    implementation("org.openapitools:jackson-databind-nullable:0.2.2")
+
     implementation("io.github.perplexhub:rsql-querydsl-spring-boot-starter:5.0.19")
 }
 

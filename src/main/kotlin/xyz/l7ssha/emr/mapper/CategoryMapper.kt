@@ -6,6 +6,7 @@ import xyz.l7ssha.emr.configuration.exception.PostValidationException
 import xyz.l7ssha.emr.configuration.security.AuthenticationFacade
 import xyz.l7ssha.emr.dto.category.CategoryCreateInputDto
 import xyz.l7ssha.emr.dto.category.CategoryOutputDto
+import xyz.l7ssha.emr.dto.category.CategoryPatchInputDto
 import xyz.l7ssha.emr.entities.products.Category
 import xyz.l7ssha.emr.repositories.CategoryRepository
 
@@ -21,6 +22,26 @@ class CategoryMapper(
             category.parent?.let { categoryToOutputDto(it) },
             category.assignable
         )
+
+    fun updateCategoryFromPatchDto(category: Category, patchDto: CategoryPatchInputDto): Category {
+        return category.apply {
+            patchDto.name.ifPresent {
+                this.name = it
+            }
+
+            patchDto.parent.ifPresent {
+                if (it == null) {
+                    this.parent = null
+                }
+
+                val parentCategory = categoryRepository.findById(it).orElseThrow {
+                    PostValidationException("Category with id: '$it' does not exists")
+                }
+
+                this.parent = parentCategory
+            }
+        }
+    }
 
     fun categoryCreateDtoToCategory(categoryInput: CategoryCreateInputDto): Category {
         val parentCategory = categoryInput.parent?.let {

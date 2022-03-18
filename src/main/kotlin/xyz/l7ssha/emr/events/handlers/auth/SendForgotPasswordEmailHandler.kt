@@ -8,19 +8,19 @@ import org.springframework.stereotype.Component
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
 import xyz.l7ssha.emr.events.commands.auth.SendEmailCommand
 import xyz.l7ssha.emr.events.commands.auth.SendForgotPasswordEmailCommand
-import xyz.l7ssha.emr.repositories.UserRepository
 import xyz.l7ssha.emr.service.ResetPasswordTokenService
+import xyz.l7ssha.emr.service.entity.UserEntityService
 
 @Component
 class SendForgotPasswordEmailHandler(
-    @Autowired val userRepository: UserRepository,
+    @Autowired val userService: UserEntityService,
     @Autowired val resetPasswordTokenService: ResetPasswordTokenService,
     @Autowired val eventPublisher: ApplicationEventPublisher,
     @Value("\${app.baseUrl}") val baseUrl: String
 ) {
     @EventListener
     fun on(event: SendForgotPasswordEmailCommand) {
-        val user = userRepository.findByEmail(event.email).orElseThrow {
+        val user = userService.findByEmail(event.email).orElseThrow {
             CatchableApplicationException("Account with given email does not exists")
         }
 

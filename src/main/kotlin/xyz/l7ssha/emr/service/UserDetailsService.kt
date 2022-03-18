@@ -6,17 +6,17 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import xyz.l7ssha.emr.configuration.security.UserPrincipal
-import xyz.l7ssha.emr.repositories.UserRepository
+import xyz.l7ssha.emr.service.entity.UserEntityService
 import javax.transaction.Transactional
 
 @Service
 @Transactional
 class UserDetailsService : UserDetailsService {
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var userService: UserEntityService
 
     override fun loadUserByUsername(username: String): UserDetails {
-       val user = userRepository.findByEmail(username)
+        val user = userService.findByEmail(username)
             .orElseThrow {
                 UsernameNotFoundException(
                     "User NOT Found"

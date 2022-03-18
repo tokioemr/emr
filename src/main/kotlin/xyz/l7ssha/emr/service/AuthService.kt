@@ -16,7 +16,7 @@ import xyz.l7ssha.emr.configuration.exception.JwtApplicationException
 import xyz.l7ssha.emr.entities.user.RefreshToken
 import xyz.l7ssha.emr.entities.user.User
 import xyz.l7ssha.emr.repositories.RefreshTokenRepository
-import xyz.l7ssha.emr.repositories.UserRepository
+import xyz.l7ssha.emr.service.entity.UserEntityService
 import java.security.SignatureException
 import java.time.Instant
 import java.util.*
@@ -26,7 +26,7 @@ private const val BEARER_TOKEN_OFFSET = 7
 
 @Service
 class AuthService(
-    @Autowired val userRepository: UserRepository,
+    @Autowired val userService: UserEntityService,
     @Autowired val userDetailsService: UserDetailsService,
     @Autowired val refreshTokenRepository: RefreshTokenRepository,
     @Autowired val resetPasswordTokenService: ResetPasswordTokenService,
@@ -36,12 +36,12 @@ class AuthService(
     @Value("\${jwt.refreshExpirationMs}") val jwtRefreshExpirationMs: Long = 60000L
 ) {
     fun registerUser(email: String, password: String): Pair<String, String> {
-        if (userRepository.findByEmail(email).isPresent) {
+        if (userService.findByEmail(email).isPresent) {
             throw CatchableApplicationException("User with given email already exists")
         }
 
         val user = User(0L, email, passwordEncoder.encode(password), true, emptySet(), false).apply {
-            userRepository.save(this)
+            userService.save(this)
         }
 
         val refreshToken = updateOrCreateRefreshTokenEntity(user)
@@ -49,7 +49,7 @@ class AuthService(
     }
 
     fun authWithPassword(email: String, password: String): Pair<String, String> {
-        val user = userRepository.findByEmail(email)
+        val user = userService.findByEmail(email)
         if (user.isEmpty) {
             throw JwtApplicationException("Missing user")
         }

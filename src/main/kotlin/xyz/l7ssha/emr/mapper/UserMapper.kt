@@ -32,7 +32,8 @@ class UserMapper(@Autowired val passwordEncoder: PasswordEncoder) {
     }
 
     fun createUserFromDto(createDto: UserCreateInputDto): User =
-        User(0L,
+        User(
+            0L,
             createDto.email,
             passwordEncoder.encode(createDto.password),
             createDto.enabled,

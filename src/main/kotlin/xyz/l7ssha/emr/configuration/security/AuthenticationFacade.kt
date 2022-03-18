@@ -6,14 +6,14 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import xyz.l7ssha.emr.entities.user.User
-import xyz.l7ssha.emr.repositories.UserRepository
+import xyz.l7ssha.emr.service.entity.UserEntityService
 
 @Component
-class AuthenticationFacade(@Autowired val userRepository: UserRepository) {
+class AuthenticationFacade(@Autowired val userService: UserEntityService) {
     val authentication: Authentication
         get() = SecurityContextHolder.getContext().authentication
 
     val loggedInUser: User
         get() = (authentication.principal as UserDetails)
-            .let { userRepository.findByEmail(it.username).orElseThrow() }
+            .let { userService.findByEmail(it.username).orElseThrow() }
 }

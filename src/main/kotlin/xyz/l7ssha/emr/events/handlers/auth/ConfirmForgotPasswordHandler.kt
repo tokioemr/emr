@@ -7,18 +7,18 @@ import org.springframework.stereotype.Component
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
 import xyz.l7ssha.emr.events.commands.auth.ConfirmForgotPasswordCommand
 import xyz.l7ssha.emr.repositories.ResetPasswordTokenRepository
-import xyz.l7ssha.emr.repositories.UserRepository
+import xyz.l7ssha.emr.service.entity.UserEntityService
 import java.time.Instant
 
 @Component
 class ConfirmForgotPasswordHandler(
-    @Autowired val userRepository: UserRepository,
+    @Autowired val userService: UserEntityService,
     @Autowired val resetPasswordTokenRepository: ResetPasswordTokenRepository,
     @Autowired val passwordEncoder: PasswordEncoder
 ){
     @EventListener
     fun on(event: ConfirmForgotPasswordCommand) {
-        val user = userRepository.findByEmail(event.email).orElseThrow {
+        val user = userService.findByEmail(event.email).orElseThrow {
             CatchableApplicationException("Account with given email does not exists")
         }
 
@@ -32,7 +32,7 @@ class ConfirmForgotPasswordHandler(
 
         user.password = passwordEncoder.encode(event.password)
         user.passwordExpired = false
-        userRepository.save(user)
+        userService.save(user)
 
         resetPasswordTokenRepository.delete(token)
     }

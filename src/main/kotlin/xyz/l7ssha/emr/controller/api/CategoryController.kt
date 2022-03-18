@@ -8,26 +8,27 @@ import org.springframework.web.bind.annotation.*
 import xyz.l7ssha.emr.configuration.security.AuthenticationFacade
 import xyz.l7ssha.emr.dto.RSQLSpecification
 import xyz.l7ssha.emr.dto.category.CategoryCreateInputDto
+import xyz.l7ssha.emr.dto.category.CategoryPatchInputDto
 import xyz.l7ssha.emr.entities.products.Category
 import xyz.l7ssha.emr.mapper.CategoryMapper
-import xyz.l7ssha.emr.repositories.CategoryRepository
+import xyz.l7ssha.emr.service.entity.CategoryEntityService
 import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/categories")
 class CategoryController(
-    @Autowired val categoryRepository: CategoryRepository,
+    @Autowired val categoryService: CategoryEntityService,
     @Autowired val categoryMapper: CategoryMapper,
     @Autowired val authenticationFacade: AuthenticationFacade
 ) {
     @GetMapping
     fun getAllAction(specification: RSQLSpecification<Category>, pageable: Pageable) =
-        categoryRepository.findAll(specification.getFiltersAndSpecification(), pageable)
+        categoryService.findAll(specification.getFiltersAndSpecification(), pageable)
             .map { categoryMapper.categoryToOutputDto(it) }
 
     @GetMapping("/{id}")
     fun getItemAction(@PathVariable id: Long) =
-        categoryRepository.getById(id).let { categoryMapper.categoryToOutputDto(it) }
+        categoryService.getById(id).let { categoryMapper.categoryToOutputDto(it) }
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_CATEGORIES')")
@@ -35,15 +36,19 @@ class CategoryController(
     fun postItemAction(@RequestBody @Valid categoryDto: CategoryCreateInputDto) =
         categoryDto
             .let { categoryMapper.categoryCreateDtoToCategory(categoryDto) }
-            .let { categoryRepository.save(it) }
+            .let { categoryService.save(it) }
             .let { categoryMapper.categoryToOutputDto(it) }
 
-    @PatchMapping
+    @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('CREATE_CATEGORIES')")
-    fun patchItemAction(): Nothing = TODO()
+    fun patchItemAction(@PathVariable id: Long, @RequestBody @Valid categoryDto: CategoryPatchInputDto) =
+        categoryDto
+            .let { categoryMapper.updateCategoryFromPatchDto(categoryService.getById(id), categoryDto) }
+            .let { categoryService.save(it) }
+            .let { categoryMapper.categoryToOutputDto(it) }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('REMOVE_CATEGORIES')")
     fun removeItemAction(@PathVariable id: Long) =
-        categoryRepository.softDelete(categoryRepository.getById(id), authenticationFacade.loggedInUser)
+        categoryService.delete(categoryService.getById(id), authenticationFacade.loggedInUser)
 }
