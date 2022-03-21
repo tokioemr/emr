@@ -15,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 import xyz.l7ssha.emr.configuration.security.JwtRequestFilter
 
 @Configuration
@@ -44,17 +47,30 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
         return super.authenticationManagerBean()
     }
 
+    @Bean
+    fun corsFilter(): CorsFilter {
+        val source = UrlBasedCorsConfigurationSource()
+        val config = CorsConfiguration()
+        config.allowCredentials = true
+        config.allowedOriginPatterns = listOf("*")
+        config.allowedHeaders = listOf("Origin", "Content-Type", "Accept", "Authorization")
+        config.allowedMethods = listOf("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH")
+        source.registerCorsConfiguration("/api/**", config)
+        return CorsFilter(source)
+    }
+
     override fun configure(web: WebSecurity) {
         web.ignoring().antMatchers("/api/auth/**")
     }
 
     override fun configure(http: HttpSecurity) {
-        http.cors().and().csrf().disable()
+        http.csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
             .antMatchers("/api/auth/**", "/docs/**").permitAll()
             .anyRequest().authenticated()
 
+        http.cors()
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 }
