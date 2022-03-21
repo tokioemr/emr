@@ -15,7 +15,7 @@ import xyz.l7ssha.emr.configuration.exception.CatchableApplicationWithDataExcept
 import xyz.l7ssha.emr.configuration.exception.JwtApplicationException
 import xyz.l7ssha.emr.entities.user.RefreshToken
 import xyz.l7ssha.emr.entities.user.User
-import xyz.l7ssha.emr.repositories.RefreshTokenRepository
+import xyz.l7ssha.emr.repositories.auth.RefreshTokenRepository
 import xyz.l7ssha.emr.service.entity.UserEntityService
 import java.security.SignatureException
 import java.time.Instant

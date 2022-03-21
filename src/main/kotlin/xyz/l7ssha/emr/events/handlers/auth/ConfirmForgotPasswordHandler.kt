@@ -6,7 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
 import xyz.l7ssha.emr.events.commands.auth.ConfirmForgotPasswordCommand
-import xyz.l7ssha.emr.repositories.ResetPasswordTokenRepository
+import xyz.l7ssha.emr.repositories.auth.ResetPasswordTokenRepository
 import xyz.l7ssha.emr.service.entity.UserEntityService
 import java.time.Instant
 

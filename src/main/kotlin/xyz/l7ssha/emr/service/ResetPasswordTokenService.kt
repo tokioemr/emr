@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 import xyz.l7ssha.emr.configuration.exception.CatchableApplicationException
 import xyz.l7ssha.emr.entities.user.ResetPasswordToken
 import xyz.l7ssha.emr.entities.user.User
-import xyz.l7ssha.emr.repositories.ResetPasswordTokenRepository
+import xyz.l7ssha.emr.repositories.auth.ResetPasswordTokenRepository
 import java.time.Instant
 import java.util.*
 

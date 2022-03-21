@@ -1,6 +1,6 @@
 package xyz.l7ssha.emr.entities.products
 
-import xyz.l7ssha.emr.entities.AbstractAuditableEntity
+import xyz.l7ssha.emr.entities.AbstractSoftDelete
 import javax.persistence.*
 
 @Entity
@@ -13,4 +13,4 @@ open class Tag(
 
     @Column(name = "name", nullable = false, unique = true)
     open var name: String
-) : AbstractAuditableEntity()
+) : AbstractSoftDelete()

@@ -1,4 +1,4 @@
-package xyz.l7ssha.emr.repositories
+package xyz.l7ssha.emr.repositories.auth
 
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository

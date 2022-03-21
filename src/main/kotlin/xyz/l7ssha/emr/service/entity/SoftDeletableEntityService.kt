@@ -15,6 +15,10 @@ abstract class SoftDeletableEntityService<T : AbstractSoftDelete> {
     @Autowired
     protected lateinit var repository: EmrRepository<T>
 
+    protected val notDeletedSpec by lazy {
+        Specification.where<T> { root, _, criteriaBuilder -> criteriaBuilder.isNull(root.get<Any>("deletedAt")) }
+    }
+
     fun delete(entity: T, user: User) {
         entity.deletedAt = Instant.now()
         entity.updatedAt = entity.deletedAt
@@ -25,18 +29,16 @@ abstract class SoftDeletableEntityService<T : AbstractSoftDelete> {
 
     fun save(entity: T) = repository.save(entity)
 
-    fun findById(id: Long) = repository.findOne { root, _, criteriaBuilder ->
-        criteriaBuilder.and(
-            criteriaBuilder.equal(root.get<Long>("id"), id),
-            criteriaBuilder.isNull(root.get<Any>("deletedAt"))
-        )
-    }
+    fun findById(id: Long) = repository.findOne(
+        notDeletedSpec.and { root, _, criteriaBuilder ->
+            criteriaBuilder.equal(root.get<Long>("id"), id)
+        }
+    )
 
     fun getById(id: Long): T = findById(id).orElseThrow { EntityNotFoundException() }
 
     fun findAll(specification: Specification<T>?, pageable: Pageable) = repository.findAll(
-        Specification.where<T> { root, _, criteriaBuilder -> criteriaBuilder.isNull(root.get<Any>("deletedAt")) }
-            .and(specification),
+        notDeletedSpec.and(specification),
         pageable
     )
 }

@@ -6,6 +6,8 @@ import xyz.l7ssha.emr.entities.AbstractSoftDelete
 import xyz.l7ssha.emr.entities.products.feature.FeatureValue
 import javax.persistence.*
 
+const val PRODUCT_DESCRIPTION_MAX_LENGTH = 16384
+
 @Entity
 @Table(name = "products", indexes = [Index(columnList = "sku", unique = true)])
 open class Product(
@@ -17,7 +19,7 @@ open class Product(
     @Column(name = "name", nullable = false, unique = true, length = 30)
     open var name: String,
 
-    @Column(name = "description", nullable = false, length = 16384)
+    @Column(name = "description", nullable = false, length = PRODUCT_DESCRIPTION_MAX_LENGTH)
     open var description: String,
 
     @Column(name = "sku", nullable = false, unique = true, updatable = false, length = 30)
@@ -42,7 +44,7 @@ open class Product(
     @Column(name = "ean", nullable = false, length = 15)
     open val ean: String,
 
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_tags", referencedColumnName = "id")
     @Fetch(FetchMode.SUBSELECT)
     open val tags: List<Tag> = mutableListOf(),
