@@ -1,14 +1,20 @@
 package xyz.l7ssha.emr.service.image
 
 import org.springframework.stereotype.Component
+import xyz.l7ssha.emr.configuration.exception.EmrNotFoundException
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.*
 
 @Component
 class LocalImageStorageAdapter : ImageStorageAdapter {
     override fun getImageBytesForId(id: UUID): ByteArray {
-        return File("/tmp/$id").readBytes()
+        return try {
+            File("/tmp/$id").readBytes()
+        } catch (_: FileNotFoundException) {
+            throw EmrNotFoundException("Image with id: $id does not exist")
+        }
     }
 
     override fun saveBytesForImage(id: UUID, imageData: ByteArray) {

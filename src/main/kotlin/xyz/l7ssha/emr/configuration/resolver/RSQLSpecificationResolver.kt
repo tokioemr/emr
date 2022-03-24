@@ -9,6 +9,7 @@ import org.springframework.web.context.request.ServletWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 import xyz.l7ssha.emr.dto.RSQLSpecification
+import xyz.l7ssha.emr.entities.AbstractSoftDelete
 
 class RSQLSpecificationResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
@@ -23,12 +24,12 @@ class RSQLSpecificationResolver : HandlerMethodArgumentResolver {
     ): Any {
         val request = (webRequest as ServletWebRequest).request
 
-        // TODO: This is hack of achieving this.
-        //  I should probably check properly for implemented interface and ten get the field
-        val filters = try {
-            Specification.where { root, _, criteriaBuilder -> criteriaBuilder.isNull(root.get<Any>("deletedAt")) }
-        } catch (_: java.lang.IllegalArgumentException) {
-            Specification.where<Any> { _, _, criteriaBuilder -> criteriaBuilder.conjunction() }
+        val filters = Specification.where<Any> { root, _, criteriaBuilder ->
+            if (!AbstractSoftDelete::class.java.isAssignableFrom(root.model.javaType)) {
+                return@where criteriaBuilder.conjunction()
+            }
+
+            criteriaBuilder.isNull(root.get<Any>("deletedAt"))
         }
 
         val filtersParamValue = request.getParameter("filter")

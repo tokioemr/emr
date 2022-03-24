@@ -1,4 +1,4 @@
-package xyz.l7ssha.emr.controller.api
+package xyz.l7ssha.emr.controller.api.product
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable

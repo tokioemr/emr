@@ -31,7 +31,7 @@ class SqlGenerationBean {
 
     @PostConstruct
     fun init() {
-        userService.save(
+        val user = userService.save(
             User(
                 0L,
                 "user",
@@ -46,14 +46,18 @@ class SqlGenerationBean {
             Category(
                 1337L,
                 "test1"
-            )
+            ).also {
+                it.createdBy = user
+            }
         )
 
         categoryService.save(
             Category(
                 1338L,
                 "test2"
-            )
+            ).also {
+                it.createdBy = user
+            }
         )
     }
 }

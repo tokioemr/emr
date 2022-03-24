@@ -2,7 +2,7 @@ package xyz.l7ssha.emr.entities.products
 
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
-import xyz.l7ssha.emr.entities.AbstractSoftDelete
+import xyz.l7ssha.emr.entities.AbstractAuditableEntity
 import javax.persistence.*
 
 @Entity
@@ -20,4 +20,4 @@ open class Price(
     @JoinColumn(name = "currencies", referencedColumnName = "id")
     @Fetch(FetchMode.JOIN)
     open val currency: Currency,
-) : AbstractSoftDelete()
+) : AbstractAuditableEntity()

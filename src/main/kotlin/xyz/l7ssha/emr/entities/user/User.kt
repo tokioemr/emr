@@ -1,6 +1,5 @@
 package xyz.l7ssha.emr.entities.user
 
-import xyz.l7ssha.emr.entities.AbstractSoftDelete
 import javax.persistence.*
 
 @Entity
@@ -26,4 +25,4 @@ open class User(
 
     @Column(name = "password_expired", nullable = false)
     open var passwordExpired: Boolean = true
-) : AbstractSoftDelete()
+)
