@@ -9,5 +9,5 @@ class FeatureGroupCreateInputDto {
     @NotBlank
     lateinit var description: String
 
-    var features: List<@NotBlank String> = mutableListOf()
+    var features: List<Long> = mutableListOf()
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*
 import xyz.l7ssha.emr.configuration.security.AuthenticationFacade
 import xyz.l7ssha.emr.dto.RSQLSpecification
 import xyz.l7ssha.emr.dto.product.feature.FeatureGroupCreateInputDto
+import xyz.l7ssha.emr.dto.product.feature.FeatureGroupPatchInputDto
 import xyz.l7ssha.emr.entities.products.feature.FeatureGroup
 import xyz.l7ssha.emr.mapper.FeatureGroupMapper
 import xyz.l7ssha.emr.service.entity.FeatureGroupEntityService
@@ -35,6 +36,22 @@ class FeatureGroupController(
     @PreAuthorize("hasAuthority('CREATE_FEATURES')")
     fun postItemAction(@RequestBody @Valid inputDto: FeatureGroupCreateInputDto) =
         featureMapper.featureGroupCreateInputDtoToFeatureGroup(inputDto)
+            .let { featureGroupService.save(it) }
+            .let { featureMapper.featureGroupToOutputDto(it) }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('CREATE_FEATURES')")
+    fun patchItemAction(@PathVariable id: Long, @RequestBody @Valid inputDto: FeatureGroupPatchInputDto) =
+        featureGroupService.getById(id)
+            .let { featureMapper.featureGroupPatchInputDtoToFeatureGroup(it, inputDto) }
+            .let { featureGroupService.save(it) }
+            .let { featureMapper.featureGroupToOutputDto(it) }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('CREATE_FEATURES')")
+    fun putItemAction(@PathVariable id: Long, @RequestBody @Valid inputDto: FeatureGroupCreateInputDto) =
+        featureGroupService.getById(id)
+            .let { featureMapper.featureGroupCreateInputDtoToFeatureGroup(it, inputDto) }
             .let { featureGroupService.save(it) }
             .let { featureMapper.featureGroupToOutputDto(it) }
 

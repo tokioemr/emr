@@ -19,8 +19,8 @@ open class FeatureGroup(
     @Column(name = "title", nullable = false)
     open var description: String,
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinColumn(name = "product_features", referencedColumnName = "id")
     @Fetch(FetchMode.SUBSELECT)
-    open val features: List<Feature>,
+    open val features: List<Feature> = mutableListOf()
 ) : AbstractAuditableEntity()
