@@ -13,7 +13,7 @@ class FeatureValueEntityService : EntityService<FeatureValue>() {
     lateinit var productRepository: ProductRepository
 
     override fun delete(entity: FeatureValue, user: User) {
-        if (productRepository.getAllByFeaturesValuesContains(entity).isNotEmpty()) {
+        if (productRepository.countAllByFeaturesValuesContains(entity) > 0) {
             throw PostValidationException("Cannot delete feature_groups since it has assigned features")
         }
 

@@ -2,12 +2,16 @@ package xyz.l7ssha.emr.mapper
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import xyz.l7ssha.emr.configuration.exception.PostValidationException
 import xyz.l7ssha.emr.configuration.security.AuthenticationFacade
 import xyz.l7ssha.emr.dto.product.feature.FeatureGroupCreateInputDto
 import xyz.l7ssha.emr.dto.product.feature.FeatureGroupOutputDto
 import xyz.l7ssha.emr.dto.product.feature.FeatureGroupPatchInputDto
+import xyz.l7ssha.emr.entities.products.feature.Feature
 import xyz.l7ssha.emr.entities.products.feature.FeatureGroup
 import xyz.l7ssha.emr.service.entity.FeatureEntityService
+import java.time.Instant
+import javax.persistence.EntityNotFoundException
 
 @Component
 class FeatureGroupMapper(
@@ -36,7 +40,7 @@ class FeatureGroupMapper(
             }
 
             inputDto.features.ifPresent {
-                val inputFeatures = it.map { id -> featureService.getById(id) }
+                val inputFeatures = mapFeatures(it)
 
                 for (feature in inputFeatures) {
                     if (!this.features.contains(feature)) {
@@ -44,6 +48,9 @@ class FeatureGroupMapper(
                     }
                 }
             }
+
+            this.updatedBy = authenticationFacade.loggedInUser
+            this.updatedAt = Instant.now()
         }
     }
 
@@ -51,17 +58,30 @@ class FeatureGroupMapper(
         featureGroup.apply {
             this.name = inputDto.name
             this.description = inputDto.description
+
             (this.features as MutableList).clear()
-            (this.features as MutableList).addAll(inputDto.features.map { featureService.getById(it) })
+            (this.features as MutableList).addAll(mapFeatures(inputDto.features))
+
+            this.updatedBy = authenticationFacade.loggedInUser
+            this.updatedAt = Instant.now()
         }
 
-    fun featureGroupCreateInputDtoToFeatureGroup(inputDto: FeatureGroupCreateInputDto) =
-        FeatureGroup(
+    fun featureGroupCreateInputDtoToFeatureGroup(inputDto: FeatureGroupCreateInputDto): FeatureGroup {
+        return FeatureGroup(
             0L,
             inputDto.name,
             inputDto.description,
-            inputDto.features.map { featureService.getById(it) }
+            mapFeatures(inputDto.features)
         ).apply {
             createdBy = authenticationFacade.loggedInUser
         }
+    }
+
+    private fun mapFeatures(featuresIds: List<Long>): List<Feature> = featuresIds.map {
+        try {
+            featureService.getById(it)
+        } catch (_: EntityNotFoundException) {
+            throw PostValidationException("Feature with id: '$it' not found")
+        }
+    }
 }

@@ -6,9 +6,12 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
+import xyz.l7ssha.emr.configuration.exception.PostValidationException
 import xyz.l7ssha.emr.entities.products.Image
 import xyz.l7ssha.emr.entities.products.ImageExtension
+import xyz.l7ssha.emr.entities.user.User
 import xyz.l7ssha.emr.repositories.ImageRepository
+import xyz.l7ssha.emr.repositories.ProductRepository
 import xyz.l7ssha.emr.service.image.ImageStorageAdapter
 import xyz.l7ssha.emr.valueobject.ImageDataTransportValueObject
 import java.math.BigInteger
@@ -18,14 +21,25 @@ import java.util.*
 @Service
 class ImageEntityService(
     @Autowired val imageStorageAdapter: ImageStorageAdapter,
-    @Autowired val imageRepository: ImageRepository
-) {
+    @Autowired val imageRepository: ImageRepository,
+    @Autowired val productRepository: ProductRepository
+) : EntityService<Image>() {
     fun getMetadataById(id: UUID) = imageRepository.getByExternalId(id)
 
+    override fun delete(entity: Image, user: User) {
+        if (productRepository.countAllByImagesContains(entity) > 0) {
+            throw PostValidationException("Cannot delete image that is used in products")
+        }
+
+        super.delete(entity, user)
+    }
+
     fun saveImage(multipartFile: MultipartFile): Image {
-        val extension = StringUtils.cleanPath(multipartFile.originalFilename ?: "").let {
+        val extension = StringUtils.cleanPath(
+            multipartFile.originalFilename ?: throw PostValidationException("Cannot obtain valid file name")
+        ).let {
             StringUtils.getFilenameExtension(it)
-        }!!
+        } ?: throw PostValidationException("Cannot obtain valid extension")
 
         val dataHash = md5(multipartFile.bytes)
         val externalId = UUID.randomUUID()

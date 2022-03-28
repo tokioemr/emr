@@ -9,6 +9,7 @@ import xyz.l7ssha.emr.dto.category.CategoryOutputDto
 import xyz.l7ssha.emr.dto.category.CategoryPatchInputDto
 import xyz.l7ssha.emr.entities.products.Category
 import xyz.l7ssha.emr.repositories.CategoryRepository
+import java.time.Instant
 
 @Component
 class CategoryMapper(
@@ -40,6 +41,9 @@ class CategoryMapper(
 
                 this.parent = parentCategory
             }
+
+            updatedBy = authenticationFacade.loggedInUser
+            updatedAt = Instant.now()
         }
     }
 
