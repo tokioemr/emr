@@ -2,6 +2,8 @@ package xyz.l7ssha.emr.controller.api.product
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import xyz.l7ssha.emr.configuration.security.AuthenticationFacade
 import xyz.l7ssha.emr.dto.RSQLSpecification
@@ -29,18 +31,22 @@ class TagController(
         tagService.getById(id).let { tagMapper.tagToOutputDto(it) }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_TAGS')")
+    @ResponseStatus(HttpStatus.CREATED)
     fun postItemAction(@RequestBody @Valid inputDto: TagCreatePatchInputDto) =
         tagMapper.inputDtoToTag(inputDto)
             .let { tagService.save(it) }
             .let { tagMapper.tagToOutputDto(it) }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('CREATE_TAGS')")
     fun patchItemAction(@PathVariable id: Long, @RequestBody @Valid inputDto: TagCreatePatchInputDto) =
         tagMapper.updateTagFromInputDto(tagService.getById(id), inputDto)
             .let { tagService.save(it) }
             .let { tagMapper.tagToOutputDto(it) }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('REMOVE_TAGS')")
     fun deleteItemAction(@PathVariable id: Long) =
         tagService.delete(tagService.getById(id), authenticationFacade.loggedInUser)
 }
