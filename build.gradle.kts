@@ -12,6 +12,8 @@ plugins {
 
     id("com.adarshr.test-logger") version "3.1.0"
     id("io.gitlab.arturbosch.detekt") version("1.19.0")
+
+    jacoco
 }
 
 group = "xyz.l7ssha"
@@ -65,6 +67,14 @@ detekt {
     allRules = false
     config = files("$projectDir/config/detekt.yml")
     baseline = file("$projectDir/config/baseline.xml")
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(false)
+        csv.required.set(false)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
 }
 
 tasks.withType<KotlinCompile> {
