@@ -19,9 +19,9 @@ open class User(
     @Column(name = "enabled", nullable = false)
     open var enabled: Boolean = false,
 
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_permissions", referencedColumnName = "id")
-    open val permissions: Set<UserPermission>,
+    open val permissions: Set<UserPermission> = mutableSetOf(),
 
     @Column(name = "password_expired", nullable = false)
     open var passwordExpired: Boolean = true

@@ -10,6 +10,7 @@ import xyz.l7ssha.emr.dto.RSQLSpecification
 import xyz.l7ssha.emr.dto.user.UserCreateInputDto
 import xyz.l7ssha.emr.dto.user.UserOutputDto
 import xyz.l7ssha.emr.dto.user.UserPatchInputDto
+import xyz.l7ssha.emr.dto.user.UserPutPermissionsInputDto
 import xyz.l7ssha.emr.entities.user.User
 import xyz.l7ssha.emr.events.commands.DeleteUserCommand
 import xyz.l7ssha.emr.mapper.UserMapper
@@ -63,4 +64,12 @@ class UserController(
             DeleteUserCommand(id)
         )
     }
+
+    @PutMapping("/{id}/roles")
+    @PreAuthorize("hasAuthority('CREATE_USERS')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun putUserRoles(@PathVariable id: Long, @RequestBody @Valid putDto: UserPutPermissionsInputDto): Unit =
+        userService.getById(id)
+            .let { userMapper.updateUserFromPutPermissionsDto(it, putDto) }
+            .let { userService.save(it) }
 }

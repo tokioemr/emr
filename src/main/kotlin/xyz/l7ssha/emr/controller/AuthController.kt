@@ -18,7 +18,6 @@ class AuthController(
     @Autowired val authService: AuthService,
     @Autowired val eventPublisher: ApplicationEventPublisher
 ) {
-
     @PostMapping("/login")
     fun authAction(@Valid @RequestBody jwtLoginInputDto: JwtLoginInputDto): JwtResultOutputDto {
         val (jwtToken, refreshToken) = authService.authWithPassword(jwtLoginInputDto.email, jwtLoginInputDto.password)

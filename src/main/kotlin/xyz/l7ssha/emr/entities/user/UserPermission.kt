@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "user_permissions")
-open class UserPermission (
+open class UserPermission(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
