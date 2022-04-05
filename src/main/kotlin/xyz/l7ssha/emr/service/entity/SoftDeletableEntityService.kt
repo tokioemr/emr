@@ -8,7 +8,7 @@ import xyz.l7ssha.emr.entities.user.User
 import java.time.Instant
 
 @Component
-abstract class SoftDeletableEntityService<T : AbstractSoftDelete>: EntityService<T>() {
+abstract class SoftDeletableEntityService<T : AbstractSoftDelete> : EntityService<T>() {
     protected val notDeletedSpec by lazy {
         Specification.where<T> { root, _, criteriaBuilder -> criteriaBuilder.isNull(root.get<Any>("deletedAt")) }
     }

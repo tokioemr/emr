@@ -9,7 +9,7 @@ import xyz.l7ssha.emr.entities.user.User
 import xyz.l7ssha.emr.service.entity.UserEntityService
 
 @Component
-class AuthenticationFacade(@Autowired val userService: UserEntityService) {
+class AuthenticationFacade(@Autowired private val userService: UserEntityService) {
     val authentication: Authentication
         get() = SecurityContextHolder.getContext().authentication
 

@@ -11,7 +11,7 @@ open class Currency(
     @Column(name = "id", nullable = false, updatable = true)
     open val id: Long,
 
-    @Column(name = "name", nullable = false, unique = true, length = 10)
+    @Column(name = "name", nullable = false, unique = true, length = 20)
     open var name: String,
 
     @Column(name = "symbol", nullable = false, unique = true, length = 3)
